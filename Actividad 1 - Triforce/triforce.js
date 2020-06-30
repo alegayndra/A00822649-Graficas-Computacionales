@@ -6,26 +6,6 @@ function sliderEvent() {
     };
 }
 
-// class Triangulo {
-//     constructor(x, y, length) {
-//         this.posX = x;
-//         this.posY = y;
-//         this.sideLenght = length;
-//     }
-
-//     dibujarTriangulo(ctx, x, y, side) {
-//         ctx.beginPath();
-//         ctx.moveTo(x, y);
-
-//         ctx.lineTo(x + side / 2, y - side);
-//         ctx.lineTo(x + side, y);
-//         ctx.lineTo(x, y);
-        
-//         ctx.fill();
-//         ctx.stroke();
-//     }
-// }
-
 function dibujarTriangulo(ctx, x, y, side) {
     ctx.beginPath();
     ctx.moveTo(x, y);
