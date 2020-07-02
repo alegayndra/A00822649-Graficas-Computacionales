@@ -6,17 +6,22 @@ let gameState = 'paused';
 
 const score = {
     left: 0,
-    right: 0
+    right: 0,
+    scored: false,
+    text: ''
 }
+
+let num = 0;
 
 document.addEventListener('keydown', (event) => {
     if (event.key == ' ' && gameState == 'paused') {
         gameState = 'restart';
+        score.scored = false;
     }
 });
 
 class Player {
-    constructor(color, x, y, width, height, upkey, downkey) {
+    constructor(color, x, y, width, height, speed, upkey, downkey) {
         this.color = color;
         
         this.x = x;
@@ -34,8 +39,7 @@ class Player {
             pressed: false
         }
 
-        let val = 4;
-        this.velocityY = val;
+        this.velocityY = speed;
 
         this.direction = 0;
         this.updatePlayer = false;
@@ -83,15 +87,14 @@ class Player {
 }
 
 class Sphere {
-    constructor(color, x, y, radius) {
+    constructor(color, x, y, radius, speed) {
         this.color = color;
         this.x = x;
         this.y = y;
-        this.radius = radius
-        let val = 8;
+        this.radius = radius;
         let dir = ((Math.random() * 2 > 1) ? 1 : -1);
-        this.velocityX = val * dir;
-        this.velocityY = val;
+        this.velocityX = speed * dir;
+        this.velocityY = speed;
     }
 
     draw() { 
@@ -122,14 +125,16 @@ class Sphere {
             this.velocityX *= -1;
         } else if (leftWall && velocityXNegative) {
             score.right++;
+            score.text = 'Player 2 scored!';
+            score.scored = true;
             gameState = 'paused';
             restart(this, [playerLeft, playerRight]);
-            // console.log(score);
         } else if ( rightWall && velocityXPositive) {
             score.left++;
+            score.text = 'Player 1 scored!';
+            score.scored = true;
             gameState = 'paused';
             restart(this, [playerLeft, playerRight]);
-            // console.log(score);
         }
 
         if ((ceiling && velocityYNegative) || (floor && velocityYPositive)) {
@@ -173,6 +178,21 @@ function update(ball, players) {
     }
 
     ball.draw();
+
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+
+    if (gameState == 'paused' && score.scored) {
+        ctx.textAlign = "center";
+        ctx.fillText(score.text, canvas.width/2, canvas.height * .35 );
+    }
+
+    ctx.textAlign = "right";
+    ctx.fillText(score.left, canvas.width/2 - 10, 50);
+
+    // ctx.font = "30px Comic Sans MS";
+    ctx.textAlign = "left";
+    ctx.fillText(score.right, canvas.width/2 + 10, 50);
 }
 
 function restart(ball, players) {
@@ -195,9 +215,21 @@ function main () {
     canvas = document.querySelector('#ballCanvas');
     ctx = canvas.getContext('2d');
 
-    let ball = new Sphere('white', canvas.width / 2, canvas.height / 2, 20);
+    let ball = new Sphere('white', canvas.width / 2, canvas.height / 2, 20, 10);
 
-    let player1 = new Player('white', 20, canvas.height * .30, 30, canvas.height * .40, 'w', 's');
-    let player2 = new Player('white', canvas.width - 50, canvas.height * .30, 30, canvas.height * .40, 'ArrowUp', 'ArrowDown');
+    let marginBarras = 20;
+    let porcentajeAlto = .38;
+    let widthBarra = 30;
+    let speed = 4;
+
+    let heightBarra = canvas.height * porcentajeAlto;
+    let yBarra = canvas.height * ((1 - porcentajeAlto) / 2);
+    let xBarra = marginBarras;
+
+    let player1 = new Player('white', xBarra, yBarra, widthBarra, heightBarra, speed, 'w', 's');
+
+    xBarra = canvas.width - marginBarras - widthBarra;
+    let player2 = new Player('white', xBarra, yBarra, widthBarra, heightBarra, speed, 'ArrowUp', 'ArrowDown');
+
     update(ball, [player1, player2]);
 }
