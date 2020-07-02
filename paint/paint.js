@@ -1,6 +1,8 @@
 let canvas = null;
 let context = null;
 let color = null;
+let tam = 10;
+let grosor = 0;
 
 let dibujando = false;
 let pos = {
@@ -38,6 +40,11 @@ function eventListeners() {
         pos.x = event.offsetX;
         pos.y = event.offsetY;
     });
+
+    document.getElementById("slider").oninput = function(event) {
+        grosor = event.target.value;
+        document.getElementById("sliderValue").innerHTML = "Value: " + event.target.value;
+    };
 }
 
 function update () {
@@ -45,7 +52,8 @@ function update () {
 
     if (dibujando) {
         context.fillStyle = color;
-        context.fillRect(pos.x, pos.y, 10, 10);
+        let size = tam * (parseInt(grosor) + 1);
+        context.fillRect(pos.x - (size / 2), pos.y - (size / 2), size, size);
     }
 }
 
