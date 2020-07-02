@@ -1,7 +1,12 @@
+let canvas = null;
+let context = null;
+let color = null;
 
-let canvas = document.querySelector('#paintCanvas');
-let context = canvas.getContext('2d');
-let color = 'green';
+let dibujando = false;
+let pos = {
+    x: 0,
+    y: 0
+}
 
 function eventListeners() {
     let colorBtns = document.querySelectorAll('.colorBtn');
@@ -20,14 +25,35 @@ function eventListeners() {
             color = event.target.style.backgroundColor;
         });
     }
+
+    canvas.addEventListener('mousedown', (event => {
+        dibujando = true;
+    }));
+
+    document.addEventListener('mouseup', (event) => {
+        dibujando = false;
+    });
+
+    canvas.addEventListener('mousemove', (event) => {
+        pos.x = event.offsetX;
+        pos.y = event.offsetY;
+    });
 }
 
 function update () {
     requestAnimationFrame(() => update());
+
+    if (dibujando) {
+        context.fillStyle = color;
+        context.fillRect(pos.x, pos.y, 10, 10);
+    }
 }
 
 function main() {
+    dibujando = false;
+    canvas = document.querySelector('#paintCanvas');
+    context = canvas.getContext('2d');
+    color = document.querySelector('.colorBtn').style.backgroundColor;
     eventListeners();
-
-
+    update();
 }
