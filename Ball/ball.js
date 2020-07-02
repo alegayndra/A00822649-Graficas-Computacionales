@@ -2,10 +2,18 @@ let ctx = null, canvas = null;
 let updatePlayer1 = false, updatePlayer2 = false;
 let direction1 = 0, direction2 = 0;
 
+let gameState = 'paused';
+
 const score = {
     left: 0,
     right: 0
 }
+
+document.addEventListener('keydown', (event) => {
+    if (event.key == ' ' && gameState == 'paused') {
+        gameState = 'restart';
+    }
+});
 
 class Player {
     constructor(color, x, y, width, height, upkey, downkey) {
@@ -81,7 +89,8 @@ class Sphere {
         this.y = y;
         this.radius = radius
         let val = 8;
-        this.velocityX = val;
+        let dir = ((Math.random() * 2 > 1) ? 1 : -1);
+        this.velocityX = val * dir;
         this.velocityY = val;
     }
 
@@ -108,16 +117,28 @@ class Sphere {
         let velocityXNegative = (this.velocityX < 0);
         let velocityYPositive = (this.velocityY > 0);
         let velocityYNegative = (this.velocityY < 0);
-
-        if (((boolPlayerLeft || leftWall) && velocityXNegative) || ((boolPlayerRight || rightWall) && velocityXPositive)) {
+    
+        if ((boolPlayerLeft && velocityXNegative) || (boolPlayerRight && velocityXPositive)) {
             this.velocityX *= -1;
+        } else if (leftWall && velocityXNegative) {
+            score.right++;
+            gameState = 'paused';
+            restart(this, [playerLeft, playerRight]);
+            // console.log(score);
+        } else if ( rightWall && velocityXPositive) {
+            score.left++;
+            gameState = 'paused';
+            restart(this, [playerLeft, playerRight]);
+            // console.log(score);
         }
 
         if ((ceiling && velocityYNegative) || (floor && velocityYPositive)) {
             this.velocityY *= -1;
         }
 
+        // console.log('x an', this);
         this.x += this.velocityX;
+        // console.log('x des', this);
         this.y += this.velocityY;
     }
 
@@ -125,24 +146,49 @@ class Sphere {
 
 function update(ball, players) {
     requestAnimationFrame(() => update(ball, players));
+
+    if (gameState == 'restart') {
+        restart(ball, players);
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     players.forEach(player => {
-        if (player.updatePlayer) {
-            player.update(canvas.height, player.direction);
+        if (gameState == 'playing') {
+            if (player.updatePlayer) {
+                player.update(canvas.height, player.direction);
+            }
+    
+            if (!(player.upkey.pressed || player.downkey.pressed)) {
+                player.updatePlayer = false;
+            }
         }
-
-        if (!(player.upkey.pressed || player.downkey.pressed)) {
-            player.updatePlayer = false;
-        }
-
         player.draw();
     });
 
-    ball.update(canvas.width, canvas.height, players[0], players[1]);
+    if (gameState == 'playing') {
+        ball.update(canvas.width, canvas.height, players[0], players[1]);
+    }
+
     ball.draw();
+}
+
+function restart(ball, players) {
+
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height / 2;
+    ball.velocityX = ball.velocityX * -1;
+
+    players.forEach(player => {
+        player.y = canvas.height * .30;
+        player.direction = 0;
+        player.upkey.pressed = false;
+        player.downkey.pressed = false;
+    });
+    
+    gameState = ((gameState == 'restart') ? 'playing' : 'paused');
 }
 
 function main () {
@@ -153,6 +199,5 @@ function main () {
 
     let player1 = new Player('white', 20, canvas.height * .30, 30, canvas.height * .40, 'w', 's');
     let player2 = new Player('white', canvas.width - 50, canvas.height * .30, 30, canvas.height * .40, 'ArrowUp', 'ArrowDown');
-
     update(ball, [player1, player2]);
 }
