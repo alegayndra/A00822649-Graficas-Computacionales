@@ -1,11 +1,16 @@
 let ctx = null, canvas = null;
 let updatePlayer1 = false, updatePlayer2 = false;
 let direction1 = 0, direction2 = 0;
-let pressed = {
+const pressed = {
     w: false,
     s: false,
     ArrowUp: false,
     ArrowDown: false
+}
+
+const score = {
+    left: 0,
+    right: 0
 }
 
 class Player {
@@ -19,6 +24,34 @@ class Player {
         this.downkey = downkey;
         let val = 4;
         this.velocityY = val;
+
+        this.direction = 0;
+        this.updatePlayer = false;
+
+        document.addEventListener('keydown', (event) => {
+
+            switch(event.key) {
+                case this.upkey:
+                    console.log('aiuda');
+                    this.direction = -1;
+                    this.updatePlayer = true;
+                    pressed[this.upkey] = true;
+                    break;
+                case this.downkey:
+                    this.direction = 1;
+                    this.updatePlayer = true;
+                    pressed[this.downkey] = true;
+                    break;
+            }        
+        });
+
+        document.addEventListener('keyup', (event) => {
+    
+            if (event.key == this.upkey || event.key == this.downkey) {
+                pressed[event.key] = false;
+            }
+        
+        }); 
     }
 
     draw() { 
@@ -32,38 +65,6 @@ class Player {
         }
     }
 }
-
-document.addEventListener('keydown', (event) => {
-
-    switch(event.key) {
-        case 'w':
-            direction1 = -1;
-            updatePlayer1 = true;
-            break;
-        case 's':
-            direction1 = 1;
-            updatePlayer1 = true;
-            break;
-        case 'ArrowUp':
-            direction2 = -1;
-            updatePlayer2 = true;
-            break;
-        case 'ArrowDown':
-            direction2 = 1;
-            updatePlayer2 = true;
-            break;
-    }
-
-    pressed[event.key] = true;
-});
-
-document.addEventListener('keyup', (event) => {
-    
-    if (event.key == 'w' || event.key == 's' || event.key == 'ArrowUp' || event.key == 'ArrowDown') {
-        pressed[event.key] = false;
-    }
-
-}); 
 
 class Sphere {
     constructor(color, x, y, radius) {
@@ -114,32 +115,25 @@ class Sphere {
 
 }
 
-function update(ball, player1, player2) {
-    requestAnimationFrame(() => update(ball, player1, player2));
+function update(ball, players) {
+    requestAnimationFrame(() => update(ball, players));
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (updatePlayer1) {
-        player1.update(canvas.height, direction1);
-    }
+    players.forEach(player => {
+        if (player.updatePlayer) {
+            player.update(canvas.height, player.direction);
+        }
 
-    if (updatePlayer2) {
-        player2.update(canvas.height, direction2);
-    }
+        if (!(pressed[player.upkey] || pressed[player.downkey])) {
+            player.updatePlayer = false;
+        }
 
-    if (!(pressed['w'] || pressed['s'])) {
-        updatePlayer1 = false;
-    } 
+        player.draw();
+    });
 
-    if (!(pressed['ArrowUp'] || pressed['ArrowDown'])) {
-        updatePlayer2 = false;
-    }
-
-    player1.draw();
-    player2.draw();
-
-    ball.update(canvas.width, canvas.height, player1, player2);
+    ball.update(canvas.width, canvas.height, players[0], players[1]);
     ball.draw();
 }
 
@@ -148,9 +142,9 @@ function main () {
     ctx = canvas.getContext('2d');
 
     let ball = new Sphere('white', canvas.width / 2, canvas.height / 2, 20);
-    let player1 = new Player('white', 20, canvas.height * .30, 30, canvas.height * .40);
-    let player2 = new Player('white', canvas.width - 50, canvas.height * .30, 30, canvas.height * .40);
-    
 
-    update(ball, player1, player2);
+    let player1 = new Player('white', 20, canvas.height * .30, 30, canvas.height * .40, 'w', 's');
+    let player2 = new Player('white', canvas.width - 50, canvas.height * .30, 30, canvas.height * .40, 'ArrowUp', 'ArrowDown');
+
+    update(ball, [player1, player2]);
 }
