@@ -14,6 +14,7 @@ const score = {
 let num = 0;
 
 document.addEventListener('keydown', (event) => {
+    event.preventDefault();
     if (event.key == ' ' && gameState == 'paused') {
         gameState = 'restart';
         score.scored = false;
