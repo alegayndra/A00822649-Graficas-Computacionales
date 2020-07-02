@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint</title>
+    <script src="./paint.js"></script>
+    <link rel="stylesheet" type="text/css" href="./paint.css">
+</head>
+<body onload="main()">
+
+    <main width="1200" style="float: left; width:350px">
+        <div>
+            <input id="slider" type="range" min="0" max="10" step="1" value="0" style="width:300px">
+            <div id="sliderValue">width: 0</div>
+        </div>
+        <button id="clearCanvas">Clear canvas</button>
+        <div style="overflow-wrap: normal;">
+            <button class="colorBtn" style="background-color: aqua; border: 3px black solid;"></button>
+            <button class="colorBtn" style="background-color: greenyellow;"></button>
+            <button class="colorBtn" style="background-color: red;"></button>
+            <button class="colorBtn" style="background-color: yellow;"></button>
+            <button class="colorBtn" style="background-color: palevioletred;"></button>
+            <button class="colorBtn" style="background-color: purple;"></button>
+            <button class="colorBtn" style="background-color: aquamarine;"></button>
+            <button class="colorBtn" style="background-color: aqua;"></button>
+            <button class="colorBtn" style="background-color: aqua;"></button>
+            <button class="colorBtn" style="background-color: aqua;"></button>
+        </div>
+    </main>
+    
+    <canvas id="paintCanvas" width="800" height="600" style="border: black; border-style: solid; border-width: 1px;"></canvas>
+
+    
+</body>
+</html>
