@@ -10,12 +10,22 @@ const score = {
 class Player {
     constructor(color, x, y, width, height, upkey, downkey) {
         this.color = color;
+        
         this.x = x;
         this.y = y;
+
         this.width = width;
         this.height = height;
-        this.upkey = upkey;
-        this.downkey = downkey;
+
+        this.upkey = {
+            value: upkey,
+            pressed: false
+        }
+        this.downkey = {
+            value: downkey,
+            pressed: false
+        }
+
         let val = 4;
         this.velocityY = val;
 
@@ -25,25 +35,29 @@ class Player {
         document.addEventListener('keydown', (event) => {
 
             switch(event.key) {
-                case this.upkey:
-                    console.log('aiuda');
+                case this.upkey.value:
                     this.direction = -1;
                     this.updatePlayer = true;
-                    pressed[this.upkey] = true;
+                    this.upkey.pressed = true;
                     break;
-                case this.downkey:
+                case this.downkey.value:
                     this.direction = 1;
                     this.updatePlayer = true;
-                    pressed[this.downkey] = true;
+                    this.downkey.pressed = true;
                     break;
             }        
         });
 
         document.addEventListener('keyup', (event) => {
     
-            if (event.key == this.upkey || event.key == this.downkey) {
-                this.updatePlayer = false;
-            }
+            switch(event.key) {
+                case this.upkey.value:
+                    this.upkey.pressed = false;
+                    break;
+                case this.downkey.value:
+                    this.downkey.pressed = false;
+                    break;
+            }  
         
         }); 
     }
@@ -79,10 +93,10 @@ class Sphere {
         ctx.fill();
     }
 
-    update(xLimit, yLimit, player1, player2) {
+    update(xLimit, yLimit, playerLeft, playerRight) {
 
-        let boolPlayer1 = (this.x - this.radius <= player1.x + player1.width && this.y >= player1.y && this.y <= player1.y + player1.height);
-        let boolPlayer2 = (this.x + this.radius >= player2.x && this.y >= player2.y && this.y <= player2.y + player2.height);
+        let boolPlayerLeft = (this.x - this.radius <= playerLeft.x + playerLeft.width && this.y >= playerLeft.y && this.y <= playerLeft.y + playerLeft.height);
+        let boolPlayerRight = (this.x + this.radius >= playerRight.x && this.y >= playerRight.y && this.y <= playerRight.y + playerRight.height);
 
         let leftWall = (this.x - this.radius <= 0);
         let rightWall = (this.x + this.radius >= xLimit);
@@ -95,7 +109,7 @@ class Sphere {
         let velocityYPositive = (this.velocityY > 0);
         let velocityYNegative = (this.velocityY < 0);
 
-        if (((boolPlayer1 || leftWall) && velocityXNegative) || ((boolPlayer2 || rightWall) && velocityXPositive)) {
+        if (((boolPlayerLeft || leftWall) && velocityXNegative) || ((boolPlayerRight || rightWall) && velocityXPositive)) {
             this.velocityX *= -1;
         }
 
@@ -118,6 +132,10 @@ function update(ball, players) {
     players.forEach(player => {
         if (player.updatePlayer) {
             player.update(canvas.height, player.direction);
+        }
+
+        if (!(player.upkey.pressed || player.downkey.pressed)) {
+            player.updatePlayer = false;
         }
 
         player.draw();
