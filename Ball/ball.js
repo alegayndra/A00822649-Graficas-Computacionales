@@ -3,6 +3,7 @@ let updatePlayer1 = false, updatePlayer2 = false;
 let direction1 = 0, direction2 = 0;
 
 let gameState = 'paused';
+let start = true;
 
 const score = {
     left: 0,
@@ -14,10 +15,11 @@ const score = {
 let num = 0;
 
 document.addEventListener('keydown', (event) => {
-    event.preventDefault();
     if (event.key == ' ' && gameState == 'paused') {
+        event.preventDefault();
         gameState = 'restart';
         score.scored = false;
+        start = false;
     }
 });
 
@@ -49,11 +51,13 @@ class Player {
 
             switch(event.key) {
                 case this.upkey.value:
+                    event.preventDefault();
                     this.direction = -1;
                     this.updatePlayer = true;
                     this.upkey.pressed = true;
                     break;
                 case this.downkey.value:
+                    event.preventDefault();
                     this.direction = 1;
                     this.updatePlayer = true;
                     this.downkey.pressed = true;
@@ -186,6 +190,14 @@ function update(ball, players) {
     if (gameState == 'paused' && score.scored) {
         ctx.textAlign = "center";
         ctx.fillText(score.text, canvas.width/2, canvas.height * .35 );
+    }
+
+    if (start) {
+        ctx.textAlign = "center";
+        ctx.font = "60px Arial";
+        ctx.fillText('Pong', canvas.width/2, canvas.height * .35 );
+        ctx.font = "30px Arial";
+        ctx.fillText('Presiona espacio para empezar', canvas.width/2, canvas.height * .65 );
     }
 
     ctx.textAlign = "right";
