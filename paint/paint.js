@@ -41,10 +41,16 @@ function eventListeners() {
         pos.y = event.offsetY;
     });
 
-    document.getElementById("slider").oninput = function(event) {
+    document.querySelector("#slider").oninput = function(event) {
         grosor = event.target.value;
         document.getElementById("sliderValue").innerHTML = "Value: " + event.target.value;
     };
+
+    document.querySelector('#clearCanvas').addEventListener('click', (event) => {
+        event.preventDefault();
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    });
 }
 
 function update () {
@@ -62,6 +68,7 @@ function main() {
     canvas = document.querySelector('#paintCanvas');
     context = canvas.getContext('2d');
     color = document.querySelector('.colorBtn').style.backgroundColor;
+    context.imageSmoothingEnabled = true;
     eventListeners();
     update();
 }
