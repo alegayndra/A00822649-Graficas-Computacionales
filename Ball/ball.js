@@ -1,12 +1,6 @@
 let ctx = null, canvas = null;
 let updatePlayer1 = false, updatePlayer2 = false;
 let direction1 = 0, direction2 = 0;
-const pressed = {
-    w: false,
-    s: false,
-    ArrowUp: false,
-    ArrowDown: false
-}
 
 const score = {
     left: 0,
@@ -48,7 +42,7 @@ class Player {
         document.addEventListener('keyup', (event) => {
     
             if (event.key == this.upkey || event.key == this.downkey) {
-                pressed[event.key] = false;
+                this.updatePlayer = false;
             }
         
         }); 
@@ -124,10 +118,6 @@ function update(ball, players) {
     players.forEach(player => {
         if (player.updatePlayer) {
             player.update(canvas.height, player.direction);
-        }
-
-        if (!(pressed[player.upkey] || pressed[player.downkey])) {
-            player.updatePlayer = false;
         }
 
         player.draw();
