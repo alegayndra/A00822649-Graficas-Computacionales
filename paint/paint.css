@@ -1,0 +1,36 @@
+.colorBtn {
+    border: 1px solid;
+	color: white;;
+	height: 50px; 
+    width: 50px;
+    margin: 5px;
+}
+
+#btnGreen {
+    border: 3px solid;
+    background-color: #439630;
+}
+
+#btnPink {
+    background-color: #C14B4C;
+}
+
+#btnBlue {
+    background-color: #2653AD;
+}
+
+#btnOrange {
+    background-color: #BF7913;
+}
+
+#btnPurple {
+    background-color: #633B8D;
+}
+
+#btnRed {
+    background-color: #B02828;
+}
+
+#btnTeal {
+    background-color: #008080;
+}
