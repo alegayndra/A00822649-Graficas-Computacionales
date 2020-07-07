@@ -251,8 +251,6 @@ function createCircle(gl) {
     for (let i = inicio; i < fin; i += 0.1) {
         verts.push(val * Math.cos(i));
         verts.push(val * Math.sin(i));
-
-        console.log(val * Math.cos(i))
         verts.push(0.0);
     }
 
@@ -262,7 +260,9 @@ function createCircle(gl) {
     // usage = A GLenum specifying the usage pattern of the data store. gl.STATIC_DRAW: Contents of the buffer are likely to be used often and not change often. Contents are written to the buffer, but not read.
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
+    let n = verts.length / 3;
+
     // The resulting object contains the vertexbuffer, the size of the vertex structure (3 floats, x, y, z), the number of vertices to be drawn, the the primitive to draw.
-    let circle = {buffer:vertexBuffer, vertSize:3, nVerts: 361, primtype:gl.TRIANGLE_FAN};
+    let circle = {buffer:vertexBuffer, vertSize:3, nVerts: n, primtype:gl.TRIANGLE_FAN};
     return circle;
 }
