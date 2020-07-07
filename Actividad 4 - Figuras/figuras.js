@@ -248,7 +248,7 @@ function createCircle(gl) {
     let r = 0.5;
     let inicio = 45, fin = 315;
 
-    for (let i = inicio; i < fin; i += 0.1) {
+    for (let i = inicio; i < fin; i++) {
         verts.push(r * Math.cos(i * Math.PI / 180));
         verts.push(r * Math.sin(i * Math.PI / 180));
         verts.push(0.0);
