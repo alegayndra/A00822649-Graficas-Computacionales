@@ -217,3 +217,52 @@ function createTriangle(gl)
     let triangle = {buffer:vertexBuffer, vertSize:3, nVerts:3, primtype:gl.TRIANGLES};
     return triangle;
 }  
+
+function createRombus(gl) {
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    let verts = [
+        .5,  0.0,  0.0,
+        0.0, .5,  0.0,
+        -.5, 0.0,  0.0,
+        0.0,  -.5,  0.0,
+    ];
+    // void gl.bufferData(target, ArrayBufferView srcData, usage, srcOffset, length);
+    // target = gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
+    // srcData = This is a new data type introduced into web browsers for use with WebGL. Float32Array is a type of ArrayBuffer, also known as a typed array. This is a JavaScript type that stores compact binary data. 
+    // usage = A GLenum specifying the usage pattern of the data store. gl.STATIC_DRAW: Contents of the buffer are likely to be used often and not change often. Contents are written to the buffer, but not read.
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+    // The resulting object contains the vertexbuffer, the size of the vertex structure (3 floats, x, y, z), the number of vertices to be drawn, the the primitive to draw.
+    let rombus = {buffer:vertexBuffer, vertSize:3, nVerts:4, primtype:gl.TRIANGLE_FAN};
+    return rombus;
+}
+
+function createCircle(gl) {
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    let verts = [0,0,0];
+    
+    let val = 0.5;
+    let inicio = Math.PI / 4, fin = (Math.PI * 2) - (Math.PI / 4);
+
+    for (let i = inicio; i < fin; i += 0.1) {
+        verts.push(val * Math.cos(i));
+        verts.push(val * Math.sin(i));
+
+        console.log(val * Math.cos(i))
+        verts.push(0.0);
+    }
+
+    // void gl.bufferData(target, ArrayBufferView srcData, usage, srcOffset, length);
+    // target = gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
+    // srcData = This is a new data type introduced into web browsers for use with WebGL. Float32Array is a type of ArrayBuffer, also known as a typed array. This is a JavaScript type that stores compact binary data. 
+    // usage = A GLenum specifying the usage pattern of the data store. gl.STATIC_DRAW: Contents of the buffer are likely to be used often and not change often. Contents are written to the buffer, but not read.
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+    // The resulting object contains the vertexbuffer, the size of the vertex structure (3 floats, x, y, z), the number of vertices to be drawn, the the primitive to draw.
+    let circle = {buffer:vertexBuffer, vertSize:3, nVerts: 361, primtype:gl.TRIANGLE_FAN};
+    return circle;
+}

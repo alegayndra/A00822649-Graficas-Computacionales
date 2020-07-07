@@ -5,7 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <script src="../libs/gl-matrix/gl-matrix.js"></script>
 <script src="../libs/jquery-3.4.1/jquery-3.4.1.min.js"></script>
-<script src=box_triangle.js></script>
+<script src="./figuras.js"></script>
 
 <script type="text/javascript">
 
@@ -21,14 +21,24 @@
 
                 let square = createSquare(gl);
                 let triangle = createTriangle(gl);
+                let rombus = createRombus(gl);
+                let circle = createCircle(gl);
 
                 mat4.identity(modelViewMatrix);
-                mat4.translate(modelViewMatrix, modelViewMatrix, [-1.0, 0.0, -3.333]);
+                mat4.translate(modelViewMatrix, modelViewMatrix, [-1.0, 0.6, -3.333]);
                 draw(gl, square);
                 
                 mat4.identity(modelViewMatrix);
-                mat4.translate(modelViewMatrix, modelViewMatrix, [1, 0.0, -3.333]);
+                mat4.translate(modelViewMatrix, modelViewMatrix, [1, 0.6, -3.333]);
                 draw(gl, triangle);
+
+                mat4.identity(modelViewMatrix);
+                mat4.translate(modelViewMatrix, modelViewMatrix, [-1, -0.8, -3.333]);
+                draw(gl, rombus);
+
+                mat4.identity(modelViewMatrix);
+                mat4.translate(modelViewMatrix, modelViewMatrix, [1, -0.8, -3.333]);
+                draw(gl, circle);
 			}
 	);
 </script>
