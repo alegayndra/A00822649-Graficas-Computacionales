@@ -245,14 +245,21 @@ function createCircle(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     let verts = [0,0,0];
     
-    let val = 0.5;
-    let inicio = Math.PI / 4, fin = (Math.PI * 2) - (Math.PI / 4);
+    let r = 0.5;
+    let inicio = 45, fin = 315;
 
     for (let i = inicio; i < fin; i += 0.1) {
-        verts.push(val * Math.cos(i));
-        verts.push(val * Math.sin(i));
+        verts.push(r * Math.cos(i * Math.PI / 180));
+        verts.push(r * Math.sin(i * Math.PI / 180));
         verts.push(0.0);
     }
+
+    // let utils = glMatrix.glMatrix;
+
+    // for (let i = 0; i < utils.toRadian(315); i += utils.toRadian(1)) {
+    //     verts.push(val * Math.cos(i * 100), val * Math.sin(i * 100), 0.0);
+    //     // cont++;
+    // }
 
     // void gl.bufferData(target, ArrayBufferView srcData, usage, srcOffset, length);
     // target = gl.ARRAY_BUFFER: Buffer containing vertex attributes, such as vertex coordinates, texture coordinate data, or vertex color data.
