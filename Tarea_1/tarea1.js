@@ -144,6 +144,8 @@ function createCube(gl, translation, rotationAxis)
             vertexColors.push(...color);
     });
 
+    console.log(vertexColors.length / 4);
+
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
 
     // Index data (defines the triangles to be drawn).
@@ -187,6 +189,252 @@ function createCube(gl, translation, rotationAxis)
     };
     
     return cube;
+}
+
+function createPyramid(gl, translation, rotationAxis) {
+    // Vertex Data
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    let verts = [
+       // Front face
+        0.0,  1.0,  0.0, 
+       -1.0, -1.0,  1.0,
+        1.0, -1.0,  1.0,
+
+       // Back face
+        0.0, 1.0,   0.0,
+       -1.0, -1.0, -1.0,
+        1.0, -1.0, -1.0,
+
+        // Right face
+        0.0,  1.0,  0.0,
+        1.0, -1.0, -1.0,
+        1.0, -1.0,  1.0,
+        
+        // Left face
+         0.0,  1.0,  0.0,
+        -1.0, -1.0, -1.0,
+        -1.0, -1.0,  1.0,
+
+        // Bottom face
+        -1.0, -1.0, -1.0,
+         1.0, -1.0, -1.0,
+         1.0, -1.0,  1.0,
+        -1.0, -1.0,  1.0,
+    ];
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+    // Color data
+    let colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    let faceColors = [
+        [1.0, 0.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 0.0, 1.0], // Front face
+        // [1.0, 0.0, 0.0, 1.0], // Front face
+        // [0.0, 1.0, 0.0, 1.0], // Back face
+        // [1.0, 0.0, 1.0, 1.0], // Right face
+        // [0.0, 1.0, 1.0, 1.0],  // Left face
+        // [1.0, 1.0, 0.0, 1.0] // Bottom face
+    ];
+
+    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
+    let vertexColors = [];
+    // for (const color of faceColors) 
+    // {
+    //     for (let j=0; j < 4; j++)
+    //         vertexColors.push(...color);
+    // }
+    faceColors.forEach(color =>{
+        for (let j=0; j < 3; j++)
+            vertexColors.push(...color);
+    });
+
+    for (let j=0; j < 3; j++) {
+        for (let i = 0; i < 4; i++) {
+            vertexColors.push(faceColors[i]);
+        }
+    }
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
+
+    // Index data (defines the triangles to be drawn).
+    let cubeIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
+
+    let cubeIndices = [
+        0, 1, 2,                  // Front face
+        3, 4, 5,                  // Back face
+        6, 7, 8,                  // Right face
+        9, 10, 11,                // Left face
+        12, 13, 14,   12, 14, 15, // Bottom face
+    ];
+
+    // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
+    // Uint16Array: Array of 16-bit unsigned integers.
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
+    
+    let pyramid = {
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
+            vertSize:3, nVerts:24, colorSize:4, nColors: 18, nIndices:18,
+            primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
+
+    mat4.translate(pyramid.modelViewMatrix, pyramid.modelViewMatrix, translation);
+
+    pyramid.update = function()
+    {
+        let now = Date.now();
+        let deltat = now - this.currentTime;
+        this.currentTime = now;
+        let fract = deltat / duration;
+        let angle = Math.PI * 2 * fract;
+    
+        // Rotates a mat4 by the given angle
+        // mat4 out the receiving matrix
+        // mat4 a the matrix to rotate
+        // Number rad the angle to rotate the matrix by
+        // vec3 axis the axis to rotate around
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+    };
+    
+    return pyramid;
+}
+
+function createOctahedron(gl, translation, rotationAxis) {
+    // Vertex Data
+    let vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    let verts = [
+       // Front top face
+        0.0,  1.0,  0.0, 
+       -0.5, -0.5,  0.5,
+        0.5, -0.5,  0.5,
+
+       // Back top face
+        0.0, 1.0,   0.0,
+       -0.5, -0.5, -0.5,
+        0.5, -0.5, -0.5,
+
+        // Right top face
+        0.0,  1.0,  0.0,
+        0.5, -0.5, -0.5,
+        0.5, -0.5,  0.5,
+        
+        // Left top face
+         0.0,  1.0,  0.0,
+        -0.5, -0.5, -0.5,
+        -0.5, -0.5,  0.5,
+
+        // Front bottom face
+        0.0, -1.0,  0.0, 
+       -0.5, -0.5,  0.5,
+        0.5, -0.5,  0.5,
+
+       // Back bottom face
+        0.0, -1.0,  0.0,
+       -0.5, -0.5, -0.5,
+        0.5, -0.5, -0.5,
+
+        // Right bottom face
+        0.0, -1.0,  0.0,
+        0.5, -0.5, -0.5,
+        0.5, -0.5,  0.5,
+        
+        // Left bottom face
+         0.0, -1.0,  0.0,
+        -0.5, -0.5, -0.5,
+        -0.5, -0.5,  0.5,
+    ];
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+    // Color data
+    let colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    let faceColors = [
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 1.0, 1.0], // Front face
+        [0.0, 1.0, 1.0, 1.0], // Front face
+        [1.0, 0.8, 0.0, 1.0], // Front face
+
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        
+        // [1.0, 0.0, 0.0, 1.0], // Front face
+        // [0.0, 1.0, 0.0, 1.0], // Back face
+        // [1.0, 0.0, 1.0, 1.0], // Right face
+        // [0.0, 1.0, 1.0, 1.0],  // Left face
+        // [1.0, 1.0, 0.0, 1.0] // Bottom face
+    ];
+
+    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
+    let vertexColors = [];
+    // for (const color of faceColors) 
+    // {
+    //     for (let j=0; j < 4; j++)
+    //         vertexColors.push(...color);
+    // }
+    faceColors.forEach(color =>{
+        for (let j=0; j < 3; j++)
+            vertexColors.push(...color);
+    });
+
+    console.log(vertexColors);
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
+
+    // Index data (defines the triangles to be drawn).
+    let cubeIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
+
+    let cubeIndices = [
+        0, 1, 2,    // Front top face
+        3, 4, 5,    // Back top face
+        6, 7, 8,    // Right top face
+        9, 10, 11,  // Left top face
+        12, 13, 14, // Front bottom face
+        15, 16, 17, // Back bottom face
+        18, 19, 20, // Right bottom face
+        21, 22, 23  // Left bottom face
+    ];
+
+    // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
+    // Uint16Array: Array of 16-bit unsigned integers.
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
+    
+    let octahedron = {
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
+            vertSize:3, nVerts:24, colorSize:4, nColors: 24, nIndices:24,
+            primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
+
+    mat4.translate(octahedron.modelViewMatrix, octahedron.modelViewMatrix, translation);
+
+    octahedron.update = function()
+    {
+        let now = Date.now();
+        let deltat = now - this.currentTime;
+        this.currentTime = now;
+        let fract = deltat / duration;
+        let angle = Math.PI * 2 * fract;
+    
+        // Rotates a mat4 by the given angle
+        // mat4 out the receiving matrix
+        // mat4 a the matrix to rotate
+        // Number rad the angle to rotate the matrix by
+        // vec3 axis the axis to rotate around
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+    };
+    
+    return octahedron;
 }
 
 function createShader(gl, str, type)

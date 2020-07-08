@@ -5,7 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <script src="../libs/gl-matrix/gl-matrix.js"></script>
 <script src="../libs/jquery-3.4.1/jquery-3.4.1.min.js"></script>
-<script src="3d_cube.js"></script>
+<script src="./tarea1.js"></script>
 
 <script type="text/javascript">
           
@@ -15,10 +15,12 @@
 			    let gl = initWebGL(canvas);
 		        initViewport(gl, canvas);
 		        initGL(canvas);
-                let cube = createCube(gl, [2 , 0, -2], [1, 1, 1]);
-                let cube2 = createCube(gl, [-2, 0, -2], [-1, 1, 0]);
+                // let cube = createCube(gl, [2 , 0, -2], [1, 1, 1]);
+				// let cube2 = createCube(gl, [-2, 0, -2], [-1, 1, 0]);
+				let pyramid = createPyramid(gl, [-4, 0, -2], [0.1, 1.0, 0.2]);
+				let octahedron = createOctahedron(gl, [4, 0, -2], [0, 1, 0]);
 		        initShader(gl);
-				run(gl, [cube, cube2]);
+				run(gl, [pyramid, octahedron]);
 			}
 	);
 
@@ -27,7 +29,7 @@
 </head>
 <body>
 
-	<canvas id="webglcanvas" style="border: none;" width="800" height="600">
+	<canvas id="webglcanvas" style="border: none;" width="1400" height="700">
 	</canvas>
 
 </body>
