@@ -1,4 +1,4 @@
-# Pong
+# Actividad 2 - Pong
 
 Juego de Pong hecho en JavaScript
 
