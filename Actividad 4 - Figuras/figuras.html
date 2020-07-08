@@ -22,7 +22,7 @@
                 let square = createSquare(gl);
                 let triangle = createTriangle(gl);
                 let rombus = createRombus(gl);
-                let circle = createCircle(gl);
+                // let circle = createCircle(gl);
 
                 mat4.identity(modelViewMatrix);
                 mat4.translate(modelViewMatrix, modelViewMatrix, [-1.0, 0.6, -3.333]);
@@ -38,7 +38,8 @@
 
                 mat4.identity(modelViewMatrix);
                 mat4.translate(modelViewMatrix, modelViewMatrix, [1, -0.8, -3.333]);
-                draw(gl, circle);
+                drawCircle(gl);
+                // draw(gl, circle);
 			}
 	);
 </script>

@@ -239,14 +239,13 @@ function createRombus(gl) {
     return rombus;
 }
 
-function createCircle(gl) {
+function createCircle(gl, inicio, fin) {
     let vertexBuffer;
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     let verts = [0,0,0];
     
     let r = 0.5;
-    let inicio = 45, fin = 315;
 
     for (let i = inicio; i < fin; i++) {
         verts.push(r * Math.cos(i * Math.PI / 180));
@@ -272,4 +271,41 @@ function createCircle(gl) {
     // The resulting object contains the vertexbuffer, the size of the vertex structure (3 floats, x, y, z), the number of vertices to be drawn, the the primitive to draw.
     let circle = {buffer:vertexBuffer, vertSize:3, nVerts: n, primtype:gl.TRIANGLE_FAN};
     return circle;
+}
+
+function drawCircle(gl) {
+    let inicio = 45;
+    let fin = 315;
+    let inicioDentro = 0;
+    let finDentro = 360;
+    let circle;
+    wakawaka(gl, circle, inicio, inicioDentro, inicio, -1, fin, finDentro, fin, 1);
+}
+
+function wakawaka (gl, circle, inicio, inicio2, posIni, iniDir, fin, fin2, posFin, finDir) {
+    requestAnimationFrame(() => wakawaka(gl, circle, inicio, inicio2, posIni, iniDir, fin, fin2, posFin, finDir));
+
+    // for (let i = 0; i < 350; i++) {
+
+        circle = createCircle(gl, posIni, posFin);
+        mat4.identity(modelViewMatrix);
+        mat4.translate(modelViewMatrix, modelViewMatrix, [1, -0.8, -3.333]);
+        draw(gl, circle);
+    
+        posIni += iniDir;
+        posFin += finDir;
+    
+        if (posIni == inicio2) {
+            iniDir = 1;
+        } else if (posIni == inicio){
+            iniDir = -1;
+        }
+    
+        if (posFin == fin2) {
+            finDir = -1;
+        } else if (posFin == fin){
+            finDir = 1;
+        }
+    // }
+
 }
