@@ -175,6 +175,7 @@ function createPyramid(gl, translation, rotationAxis) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angle = Math.PI * 2 * fract;
+        angle /= rotationAxis.length;
     
         // Rotates a mat4 by the given angle
         // mat4 out the receiving matrix
@@ -298,6 +299,7 @@ function createOctahedron(gl, translation, rotationAxis) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angle = Math.PI * 2 * fract;
+        angle /= rotationAxis.length;
     
         // Rotates a mat4 by the given angle
         // mat4 out the receiving matrix
@@ -516,6 +518,7 @@ function createDodecahedron(gl, translation, rotationAxis) {
         this.currentTime = now;
         let fract = deltat / duration;
         let angle = Math.PI * 2 * fract;
+        angle /= rotationAxis.length;
     
         // Rotates a mat4 by the given angle
         // mat4 out the receiving matrix
