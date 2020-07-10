@@ -423,73 +423,36 @@ function createDodecahedron(gl, translation, rotationAxis) {
     let colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     let faceColors = [
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.8, 1.0, 0.7, 1.0], // Front face
+        [0.4, 0.0, 0.7, 1.0], // Top front left face
+        [0.0, 0.5, 0.5, 1.0], // Top front right face
+        [0.4, 0.6, 0.4, 1.0], // Bottom front left face
+        [0.4, 0.0, 0.0, 1.0], // Bottom front right face
+        [0.0, 1.0, 0.9, 1.0], // Bottom front face
 
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
-        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 0.2, 0.2, 1.0], // Back face
+        [0.7, 0.0, 1.0, 1.0], // Top Back left face
+        [0.0, 0.5, 0.0, 1.0], // Top Back right face
+        [0.6, 0.8, 0.0, 1.0], // Bottom Back left face
+        [0.4, 1.0, 0.0, 1.0], // Bottom Back right face
+        [0.4, 0.0, 4.0, 1.0], // Bottom Back face
     ];
 
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
     let vertexColors = [];
 
     faceColors.forEach(color =>{
-        for (let j=0; j < 3; j++)
+        for (let j=0; j < 5; j++)
             vertexColors.push(...color);
     });
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
 
     // Index data (defines the triangles to be drawn).
-    let cubeIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
+    let indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    let cubeIndices = [
+    let indices = [
         // Front --------
 
         // Front face
@@ -533,19 +496,15 @@ function createDodecahedron(gl, translation, rotationAxis) {
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
     // Uint16Array: Array of 16-bit unsigned integers.
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
     
     let nverts = verts.length / 3;
     let numColors = vertexColors.length / 4;
-    let indexes = cubeIndices.length;
-    console.log(nverts * 3);
-    console.log(nverts);
-    // console.log(numColors);
-    // console.log(faceColors.length);
+    let indexes = indices.length;
 
     let dodecahedron = {
-            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
-            vertSize:3, nVerts: 220, colorSize:4, nColors: numColors, nIndices: indexes,
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:indexBuffer,
+            vertSize:3, nVerts: nverts, colorSize:4, nColors: numColors, nIndices: indexes,
             primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
 
     mat4.translate(dodecahedron.modelViewMatrix, dodecahedron.modelViewMatrix, translation);
