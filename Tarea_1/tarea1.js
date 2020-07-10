@@ -110,7 +110,7 @@ function createPyramid(gl, translation, rotationAxis) {
         -1.0, -1.0,  0.1, // 2
          1.0, -1.0,  0.1, // 3
         -0.5, -1.0, -1.0, // 4
-         0.5, -1.0, -1.0  // 4
+         0.5, -1.0, -1.0  // 5
     ];
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -181,7 +181,9 @@ function createPyramid(gl, translation, rotationAxis) {
         // mat4 a the matrix to rotate
         // Number rad the angle to rotate the matrix by
         // vec3 axis the axis to rotate around
-        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+        for (let i = 0; i < rotationAxis.length; i++) {
+            mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis[i]);
+        }
     };
     
     return pyramid;
@@ -301,7 +303,15 @@ function createOctahedron(gl, translation, rotationAxis) {
         // mat4 a the matrix to rotate
         // Number rad the angle to rotate the matrix by
         // vec3 axis the axis to rotate around
-        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+        for (let i = 0; i < rotationAxis.length; i++) {
+            mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis[i]);
+        }
+        console.log(this.modelViewMatrix);
+        
+        this.modelViewMatrix[13] += 0.01;
+        if (this.modelViewMatrix[13] >= 1) {
+            this.modelViewMatrix[13] = -2;
+        }
     };
     
     return octahedron;
@@ -314,45 +324,95 @@ function createDodecahedron(gl, translation, rotationAxis) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
     let verts = [
-       // Front top face
-        0.0,  1.0,  0.0, 
-       -0.5,  0.0,  0.5,
-        0.5,  0.0,  0.5,
 
-       // Back top face
-        0.0,  1.0,   0.0,
-       -0.5,  0.0, -0.5,
-        0.5,  0.0, -0.5,
+        // Front
 
-        // Right top face
-        0.0,  1.0,  0.0,
-        0.5,  0.0, -0.5,
-        0.5,  0.0,  0.5,
+        // Front face
+         1.0,  1.0,  1.0,       // 0
+         0.0,  0.618,  1.618,   // 1
+         1.618,  0.0,  0.618,   // 2
+         0.0, -0.618,  1.618,   // 3
+         1.0, -1.0,  1.0,       // 4
+
+        // Top front left face
+        -0.618,  1.618,  0.0,   // 5
+        -1.0,  1.0,  1.0,       // 6
+         0.618,  1.618,  0.0,   // 7
+         0.0,  0.618,  1.618,   // 1
+         1.0,  1.0,  1.0,       // 0
+
+        // Top front right face
+         1.0,  1.0, -1.0,       // 8
+         0.618,  1.618,  0.0,   // 7
+         1.618,  0.0, -0.618,   // 9
+         1.0,  1.0,  1.0,       // 0
+         1.618,  0.0,  0.618,   // 2
+
+        // Bottom front left face
+        -1.0,  1.0,  1.0,       // 6
+        -1.618,  0.0,  0.618,   // 14
+         0.0,  0.618,  1.618,   // 1
+        -1.0, -1.0,  1.0,       // 13
+         0.0, -0.618,  1.618,   // 3
+
+        // Bottom front right face
+         1.618,  0.0,  0.618,   // 2
+         1.0, -1.0,  1.0,       // 4
+         1.618,  0.0, -0.618,   // 9
+         0.618, -1.618, 0.0,    // 11
+         1.0, -1.0, -1.0,       // 10
+
+        // Bottom front face
+         0.0, -0.618,  1.618,   // 3 
+        -1.0, -1.0,  1.0,       // 13
+         1.0, -1.0,  1.0,       // 4
+        -0.618, -1.618, 0.0,    // 12
+         0.618, -1.618, 0.0,    // 11
+
+        // Back ----------------------
+
+        // Back face
+        -1.0,  1.0, -1.0,       // 15 
+        -1.618,  0.0, -0.618,   // 16
+         0.0,  0.618, -1.618,   // 17
+        -1.0, -1.0, -1.0,       // 18
+         0.0, -0.618, -1.618,   // 19
+
+        // Top back left face
+        -1.0,  1.0,  1.0,       // 6
+        -1.618,  0.0,  0.618,   // 14
+        -0.618,  1.618,  0.0,   // 5
+        -1.618,  0.0, -0.618,   // 16
+        -1.0,  1.0, -1.0,       // 15
         
-        // Left top face
-         0.0,  1.0,  0.0,
-        -0.5,  0.0, -0.5,
-        -0.5,  0.0,  0.5,
-
-        // Front bottom face
-        0.0, -1.0,  0.0, 
-       -0.5,  0.0,  0.5,
-        0.5,  0.0,  0.5,
-
-       // Back bottom face
-        0.0, -1.0,  0.0,
-       -0.5,  0.0, -0.5,
-        0.5,  0.0, -0.5,
-
-        // Right bottom face
-        0.0, -1.0,  0.0,
-        0.5,  0.0, -0.5,
-        0.5,  0.0,  0.5,
+        // Top back face 
+         0.618,  1.618,  0.0,   // 7
+        -0.618,  1.618,  0.0,   // 5
+         1.0,  1.0, -1.0,       // 8
+        -1.0,  1.0, -1.0,       // 15
+         0.0,  0.618, -1.618,   // 17
         
-        // Left bottom face
-         0.0, -1.0,  0.0,
-        -0.5,  0.0, -0.5,
-        -0.5,  0.0,  0.5,
+        // Top back right face
+         1.618,  0.0, -0.618,   // 9
+         1.0,  1.0, -1.0,       // 8
+         1.0, -1.0, -1.0,       // 10
+         0.0,  0.618, -1.618,   // 17
+         0.0, -0.618, -1.618,   // 19
+         
+         // Bottom back left face
+         -1.618,  0.0, -0.618,   // 16
+         -1.618,  0.0,  0.618,   // 14
+         -1.0, -1.0, -1.0,       // 18
+         -1.0, -1.0,  1.0,       // 13
+         -0.618, -1.618, 0.0,    // 12
+
+
+         // Bottom back right face
+         0.0, -0.618, -1.618,   // 19
+        -1.0, -1.0, -1.0,       // 18
+         1.0, -1.0, -1.0,       // 10
+        -0.618, -1.618, 0.0,    // 12
+         0.618, -1.618, 0.0,    // 11
     ];
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -364,12 +424,53 @@ function createDodecahedron(gl, translation, rotationAxis) {
         [1.0, 1.0, 0.0, 1.0], // Front face
         [1.0, 0.0, 1.0, 1.0], // Front face
         [0.0, 1.0, 1.0, 1.0], // Front face
-        [0.5, 0.8, 0.0, 1.0], // Front face
 
+        [0.5, 0.8, 0.0, 1.0], // Front face
         [1.0, 0.5, 0.0, 1.0], // Front face
         [1.0, 0.3, 0.4, 1.0], // Front face
+
         [0.4, 1.0, 0.7, 1.0], // Front face
         [1.0, 1.0, 0.0, 1.0], // Front face
+        [0.8, 0.8, 0.0, 1.0], // Front face
+
+
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 1.0, 1.0], // Front face
+        [0.0, 1.0, 1.0, 1.0], // Front face
+
+        [0.5, 0.8, 0.0, 1.0], // Front face
+        [1.0, 0.5, 0.0, 1.0], // Front face
+        [1.0, 0.3, 0.4, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [0.8, 0.8, 0.0, 1.0], // Front face
+
+
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 1.0, 1.0], // Front face
+        [0.0, 1.0, 1.0, 1.0], // Front face
+
+        [0.5, 0.8, 0.0, 1.0], // Front face
+        [1.0, 0.5, 0.0, 1.0], // Front face
+        [1.0, 0.3, 0.4, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [0.8, 0.8, 0.0, 1.0], // Front face
+
+
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [1.0, 0.0, 1.0, 1.0], // Front face
+        [0.0, 1.0, 1.0, 1.0], // Front face
+
+        [0.5, 0.8, 0.0, 1.0], // Front face
+        [1.0, 0.5, 0.0, 1.0], // Front face
+        [1.0, 0.3, 0.4, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [1.0, 1.0, 0.0, 1.0], // Front face
+        [0.8, 0.8, 0.0, 1.0], // Front face
     ];
 
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
@@ -387,23 +488,62 @@ function createDodecahedron(gl, translation, rotationAxis) {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
 
     let cubeIndices = [
-        0, 1, 2,    // Front top face
-        3, 4, 5,    // Back top face
-        6, 7, 8,    // Right top face
-        9, 10, 11,  // Left top face
-        12, 13, 14, // Front bottom face
-        15, 16, 17, // Back bottom face
-        18, 19, 20, // Right bottom face
-        21, 22, 23  // Left bottom face
+        // Front --------
+
+        // Front face
+        0, 1, 3,        0, 3, 4,        0, 4, 2,
+
+        // Top front left face
+        5, 6, 8,        5, 8, 9,        5, 9, 7,
+        
+        // Top front right face
+        10, 11, 13,     10, 13, 14,     10, 14, 12,
+
+        // Bottom front left face
+        15, 16, 18,     15, 18, 19,     15, 19, 17,
+
+        // Bottom front right face
+        20, 21, 23,     20, 23, 24,     20, 24, 22,
+        
+        // Bottom front face
+        25, 26, 28,     25, 28, 29,     25, 29, 27,
+
+        // Back --------
+        
+        // Back face
+        30, 31, 33,     30, 33, 34,     30, 34, 32,
+
+        // Top back left face
+        35, 36, 38,     35, 38, 39,     35, 39, 37,
+
+        // Top back right face
+        40, 41, 43,     40, 43, 44,     40, 44, 42,
+        
+        // Bottom back left face
+        45, 46, 48,     45, 48, 49,     45, 49, 47,
+
+        // Bottom back right face
+        50, 51, 53,     50, 53, 54,     50, 54, 52,
+
+        // Bottom back face
+        55, 56, 58,     55, 58, 59,     55, 59, 57,
     ];
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
     // Uint16Array: Array of 16-bit unsigned integers.
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
     
+    let nverts = verts.length / 3;
+    let numColors = vertexColors.length / 4;
+    let indexes = cubeIndices.length;
+    console.log(nverts * 3);
+    console.log(nverts);
+    // console.log(numColors);
+    // console.log(faceColors.length);
+
     let dodecahedron = {
             buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
-            vertSize:3, nVerts:24, colorSize:4, nColors: 24, nIndices:24,
+            vertSize:3, nVerts: 220, colorSize:4, nColors: numColors, nIndices: indexes,
             primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
 
     mat4.translate(dodecahedron.modelViewMatrix, dodecahedron.modelViewMatrix, translation);
@@ -421,7 +561,9 @@ function createDodecahedron(gl, translation, rotationAxis) {
         // mat4 a the matrix to rotate
         // Number rad the angle to rotate the matrix by
         // vec3 axis the axis to rotate around
-        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+        for (let i = 0; i < rotationAxis.length; i++) {
+            mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis[i]);
+        }
     };
     
     return dodecahedron;
