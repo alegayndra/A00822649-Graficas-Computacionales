@@ -286,7 +286,8 @@ function createOctahedron(gl, translation, rotationAxis) {
     let octahedron = {
             buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
             vertSize:3, nVerts:24, colorSize:4, nColors: 24, nIndices:24,
-            primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
+            primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now(),
+            speed: 0.01, direction: 1};
 
     mat4.translate(octahedron.modelViewMatrix, octahedron.modelViewMatrix, translation);
 
@@ -306,11 +307,12 @@ function createOctahedron(gl, translation, rotationAxis) {
         for (let i = 0; i < rotationAxis.length; i++) {
             mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis[i]);
         }
-        console.log(this.modelViewMatrix);
         
-        this.modelViewMatrix[13] += 0.01;
-        if (this.modelViewMatrix[13] >= 1) {
-            this.modelViewMatrix[13] = -2;
+        let limit = 1.8;
+
+        this.modelViewMatrix[13] += this.speed * this.direction;
+        if ((this.modelViewMatrix[13] >= limit && this.direction > 0) || (this.modelViewMatrix[13] <= -1 * limit && this.direction < 0)) {
+            this.direction *= -1;
         }
     };
     
@@ -421,56 +423,56 @@ function createDodecahedron(gl, translation, rotationAxis) {
     let colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     let faceColors = [
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [1.0, 0.0, 1.0, 1.0], // Front face
-        [0.0, 1.0, 1.0, 1.0], // Front face
-
-        [0.5, 0.8, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.3, 0.4, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
 
         [0.4, 1.0, 0.7, 1.0], // Front face
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [0.8, 0.8, 0.0, 1.0], // Front face
-
-
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [1.0, 0.0, 1.0, 1.0], // Front face
-        [0.0, 1.0, 1.0, 1.0], // Front face
-
-        [0.5, 0.8, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.3, 0.4, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
 
         [0.4, 1.0, 0.7, 1.0], // Front face
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [0.8, 0.8, 0.0, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
 
-
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [1.0, 0.0, 1.0, 1.0], // Front face
-        [0.0, 1.0, 1.0, 1.0], // Front face
-
-        [0.5, 0.8, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.3, 0.4, 1.0], // Front face
 
         [0.4, 1.0, 0.7, 1.0], // Front face
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [0.8, 0.8, 0.0, 1.0], // Front face
-
-
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [1.0, 0.0, 1.0, 1.0], // Front face
-        [0.0, 1.0, 1.0, 1.0], // Front face
-
-        [0.5, 0.8, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.3, 0.4, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
 
         [0.4, 1.0, 0.7, 1.0], // Front face
-        [1.0, 1.0, 0.0, 1.0], // Front face
-        [0.8, 0.8, 0.0, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
+        [0.4, 1.0, 0.7, 1.0], // Front face
     ];
 
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
