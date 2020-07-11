@@ -72,6 +72,15 @@ function initGL(canvas)
     mat4.translate(projectionMatrix, projectionMatrix, [0, 0, -5]);
 }
 
+/*
+    Crea una piramide
+    Entrada:
+    - gl:           contexto de WebGL
+    - translation:  arreglo de traslación para mover la figura
+    - rotationAxis: matriz con los diferentes ejes de rotación
+    Salida:
+    Objeto con la información de vertices, colores y más
+*/
 function createPyramid(gl, translation, rotationAxis) {
     // Vertex Data
     let vertexBuffer;
@@ -79,30 +88,29 @@ function createPyramid(gl, translation, rotationAxis) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
     let verts = [
-
-        // Face
+        // Triangle Face
          0.0,  1.0,  0.0,
          0.0, -1.0,  1.0, 
         -1.0, -1.0,  0.1, 
 
-        // Face
+        // Triangle Face
          0.0,  1.0,  0.0,
         -1.0, -1.0,  0.1, 
         -0.5, -1.0, -1.0, 
 
-        // Face
+        // Triangle Face
          0.0,  1.0,  0.0,
          1.0, -1.0,  0.1,
          0.5, -1.0, -1.0,
         
-        // Face
+        // Triangle Face
          0.0,  1.0,  0.0,
         -0.5, -1.0, -1.0,
          0.5, -1.0, -1.0,
 
-        // Face
+        // Triangle Face
          0.0,  1.0,  0.0,
-         0.0, -1.0,  1.0, // 1
+         0.0, -1.0,  1.0,
          1.0, -1.0,  0.1,
 
         // Pentagon face
@@ -119,16 +127,15 @@ function createPyramid(gl, translation, rotationAxis) {
     let colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     let faceColors = [
-        [1.0, 0.0, 0.0, 1.0], // Front face
-        [1.0, 0.0, 1.0, 1.0], // Front face
-        [0.0, 1.0, 1.0, 1.0], // Front face
-        [0.5, 0.8, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.7, 1.0], // Front face
+        [1.0, 0.0, 0.0, 1.0], // Triangle face
+        [1.0, 0.0, 1.0, 1.0], // Triangle face
+        [0.0, 1.0, 1.0, 1.0], // Triangle face
+        [0.5, 0.8, 0.0, 1.0], // Triangle face
+        [1.0, 0.5, 0.7, 1.0], // Triangle face
 
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-        [1.0, 0.5, 0.0, 1.0], // Front face
-
+        [1.0, 0.5, 0.0, 1.0], // Pentagon face
+        [1.0, 0.5, 0.0, 1.0], // Pentagon face
+        [1.0, 0.5, 0.0, 1.0], // Pentagon face
     ];
 
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the cube's face.
@@ -142,10 +149,10 @@ function createPyramid(gl, translation, rotationAxis) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
 
     // Index data (defines the triangles to be drawn).
-    let cubeIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
+    let indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    let cubeIndices = [
+    let indices = [
         0, 1, 2,    // Front top face
         3, 4, 5,    // Back top face
         6, 7, 8,    // Right top face
@@ -159,10 +166,10 @@ function createPyramid(gl, translation, rotationAxis) {
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
     // Uint16Array: Array of 16-bit unsigned integers.
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
     
     let pyramid = {
-            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:indexBuffer,
             vertSize:3, nVerts:20, colorSize:4, nColors: 8, nIndices:24,
             primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
 
@@ -190,6 +197,15 @@ function createPyramid(gl, translation, rotationAxis) {
     return pyramid;
 }
 
+/*
+    Crea una Octaedro
+    Entrada:
+    - gl:           contexto de WebGL
+    - translation:  arreglo de traslación para mover la figura
+    - rotationAxis: matriz con los diferentes ejes de rotación
+    Salida:
+    Objeto con la información de vertices, colores y más
+*/
 function createOctahedron(gl, translation, rotationAxis) {
     // Vertex Data
     let vertexBuffer;
@@ -266,10 +282,10 @@ function createOctahedron(gl, translation, rotationAxis) {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
 
     // Index data (defines the triangles to be drawn).
-    let cubeIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIndexBuffer);
+    let indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    let cubeIndices = [
+    let indices = [
         0, 1, 2,    // Front top face
         3, 4, 5,    // Back top face
         6, 7, 8,    // Right top face
@@ -282,10 +298,10 @@ function createOctahedron(gl, translation, rotationAxis) {
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
     // Uint16Array: Array of 16-bit unsigned integers.
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeIndices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
     
     let octahedron = {
-            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:cubeIndexBuffer,
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:indexBuffer,
             vertSize:3, nVerts:24, colorSize:4, nColors: 24, nIndices:24,
             primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now(),
             speed: 0.01, direction: 1};
@@ -310,9 +326,13 @@ function createOctahedron(gl, translation, rotationAxis) {
             mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis[i]);
         }
         
+        // Limite en el eje y de la figura
         let limit = 1.8;
 
+        // Cambia la posición en el eje y de la figura
         this.modelViewMatrix[13] += this.speed * this.direction;
+
+        // Checa si la figura ya llegó a su limite en el eje y para ir en la dirección opuesta
         if ((this.modelViewMatrix[13] >= limit && this.direction > 0) || (this.modelViewMatrix[13] <= -1 * limit && this.direction < 0)) {
             this.direction *= -1;
         }
@@ -321,6 +341,15 @@ function createOctahedron(gl, translation, rotationAxis) {
     return octahedron;
 }
 
+/*
+    Crea una dodecaedro
+    Entrada:
+    - gl:           contexto de WebGL
+    - translation:  arreglo de traslación para mover la figura
+    - rotationAxis: matriz con los diferentes ejes de rotación
+    Salida:
+    Objeto con la información de vertices, colores y más
+*/
 function createDodecahedron(gl, translation, rotationAxis) {
     // Vertex Data
     let vertexBuffer;
