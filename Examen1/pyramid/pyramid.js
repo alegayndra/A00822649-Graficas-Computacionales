@@ -145,26 +145,38 @@ function draw(gl, objs)
     }
 }
 
+// arreglos utilizados por la piramide
 let verts = [];
 let vertexColors = [];
 let pyramidIndices = [];
 
+/*
+    Funcion recursiva para crear el triangulo de sierpinski para la cara de abajo de la piramide
+    Entrada:
+        - ctx:          Contexto del canvas
+        - iteraciones:  Número de divisiones que aun faltan por hacer
+        - x:            Posicion en el eje x 
+        - y:            Posicion en el eje y 
+        - z:            Posicion en el eje z 
+        - tamaño:       Tamaño de los lados del triangulo
+*/
 function piso(gl, iteraciones, x, y, z, tamaño) {
     // checa si quedan divisiones por hacer
     // si quedan, divide el triangulo actual en tres
     // si no, dibuja el triangulo
     if (iteraciones > 0) {
-        
-        piso(gl, iteraciones - 1, x - tamaño / 2, y, z + tamaño / 2, tamaño / 2); // triangulo izquierdo
-        piso(gl, iteraciones - 1, x + tamaño / 2, y, z + tamaño / 2, tamaño / 2); // triangulo derecho
-        piso(gl, iteraciones - 1, x,              y, z - tamaño / 2, tamaño / 2); // triangulo superior
+        tamaño /= 2;
+        iteraciones--;
+        piso(gl, iteraciones, x - tamaño, y, z + tamaño, tamaño); // triangulo izquierdo
+        piso(gl, iteraciones, x + tamaño, y, z + tamaño, tamaño); // triangulo derecho
+        piso(gl, iteraciones, x,          y, z - tamaño, tamaño); // triangulo superior
     } else {
         // poner información de vertices en los vectores
-        verts.push( x - tamaño, y,  z + tamaño);
-        verts.push( x + tamaño, y,  z + tamaño);
-        verts.push( x,          y,  z - tamaño);
-
+        verts.push(x - tamaño, y,  z + tamaño);
+        verts.push(x + tamaño, y,  z + tamaño);
+        verts.push(x,          y,  z - tamaño);
         
+        // genera un color aleatorio para la cara
         let r = Math.random();
         let g = Math.random();
         let b = Math.random();
@@ -175,35 +187,35 @@ function piso(gl, iteraciones, x, y, z, tamaño) {
     }
 }
 
-function dividir(gl, iteraciones, iteracion, x, y, z, tamaño) {
-
-    // checa si quedan divisiones por hacer
-    // si quedan, divide el triangulo actual en tres
-    // si no, dibuja el triangulo
+/*
+    Funcion recursiva para crear el triangulo de sierpinski para laa caras laterales de la piramide
+    Entrada:
+        - ctx:          Contexto del canvas
+        - iteraciones:  Número de divisiones que aun faltan por hacer
+        - x:            Posicion en el eje x 
+        - y:            Posicion en el eje y 
+        - z:            Posicion en el eje z 
+        - tamaño:       Tamaño de los lados del triangulo
+*/
+function laterales(gl, iteraciones, x, y, z, tamaño) {
     if (iteraciones > 0) {
-        dividir(gl, iteraciones - 1, iteracion + 1, x - tamaño / 2, y - tamaño / 2, z + (tamaño / 2), tamaño / 2); // triangulo izquierdo
-        dividir(gl, iteraciones - 1, iteracion + 1, x + tamaño / 2, y - tamaño / 2, z + (tamaño / 2), tamaño / 2); // triangulo derecho
-        dividir(gl, iteraciones - 1, iteracion + 1, x,              y + tamaño / 2, z, tamaño / 2); // triangulo superior
+        tamaño /= 2;
+        iteraciones--;
+        laterales(gl, iteraciones, x,          y - tamaño, z - tamaño, tamaño); // triangulo izquierdo
+        laterales(gl, iteraciones, x - tamaño, y - tamaño, z + tamaño, tamaño); // triangulo derecho
+        laterales(gl, iteraciones, x,          y + tamaño, z,          tamaño); // triangulo superior
     } else {
         // poner información de vertices en los vectores
-        let zeta = (z + tamaño) ;
-        verts.push(x - tamaño, y + tamaño * -1, zeta);
-        verts.push(x + tamaño,      y + tamaño * -1, zeta);
-        verts.push(x,               y + tamaño,      z);
+        verts.push(x,          y - tamaño, z - tamaño);
+        verts.push(x - tamaño, y - tamaño, z + tamaño);
+        verts.push(x,          y + tamaño, z);
 
-        verts.push(-zeta, y + tamaño * -1, x - tamaño);
-        verts.push(-zeta, y + tamaño * -1, x + tamaño);
-        verts.push(-z,    y + tamaño,      x);
+        verts.push(-x,          y - tamaño, z - tamaño);
+        verts.push(-x + tamaño, y - tamaño, z + tamaño);
+        verts.push(-x,          y + tamaño, z);
 
-        // verts.push(x + tamaño * -1, y + tamaño * -1, -zeta);
-        // verts.push(x + tamaño,      y + tamaño * -1, -zeta);
-        // verts.push(x,               y + tamaño,      -z);
-
-        verts.push(zeta, y + tamaño * -1, x - tamaño);
-        verts.push(zeta, y + tamaño * -1, x + tamaño);
-        verts.push(z,    y + tamaño,      x);
-
-        for (let j = 0; j < 3; j++) {
+        // genera un color aleatorio para cada cara lateral
+        for (let j = 0; j < 2; j++) {
             let r = Math.random();
             let g = Math.random();
             let b = Math.random();
@@ -214,23 +226,56 @@ function dividir(gl, iteraciones, iteracion, x, y, z, tamaño) {
     }
 }
 
+/*
+    Funcion recursiva para crear el triangulo de sierpinski para la cara frontal de la piramide
+    Entrada:
+        - ctx:          Contexto del canvas
+        - iteraciones:  Número de divisiones que aun faltan por hacer
+        - x:            Posicion en el eje x 
+        - y:            Posicion en el eje y 
+        - z:            Posicion en el eje z 
+        - tamaño:       Tamaño de los lados del triangulo
+*/
+function dividir(gl, iteraciones, x, y, z, tamaño) {
+
+    // checa si quedan divisiones por hacer
+    // si quedan, divide el triangulo actual en tres
+    // si no, dibuja el triangulo
+    if (iteraciones > 0) {
+        tamaño /= 2;
+        iteraciones--;
+        dividir(gl, iteraciones, x - tamaño, y - tamaño, z + tamaño, tamaño); // triangulo izquierdo
+        dividir(gl, iteraciones, x + tamaño, y - tamaño, z + tamaño, tamaño); // triangulo derecho
+        dividir(gl, iteraciones, x,          y + tamaño, z,          tamaño); // triangulo superior
+    } else {
+        // poner información de vertices en los vectores
+        let zeta = (z + tamaño) ;
+        verts.push(x - tamaño, y - tamaño, zeta);
+        verts.push(x + tamaño, y - tamaño, zeta);
+        verts.push(x,          y + tamaño, z);
+        
+        // genera un color aleatorio para la cara
+        let r = Math.random();
+        let g = Math.random();
+        let b = Math.random();
+        for (let i = 0; i < 3; i++) {
+            vertexColors.push(r, g, b, 1);
+        }
+    }
+}
+
 function createPyramid(gl, translation, rotationAxis) {
-    let iteracionesTotales = 1;
+    // llamadas recursivas para crear los triangulos de sierpinski
+    let iteracionesTotales = 3;
     let x = 0;
     let y = 0;
     let z = 0;
     let tam = 0.5;
-    dividir(gl, iteracionesTotales, 0, x, y, z, tam);
+    dividir  (gl, iteracionesTotales, x, y,    z, tam);
+    laterales(gl, iteracionesTotales, x, y,    z, tam);
+    piso     (gl, iteracionesTotales, x, -tam, z, tam);
 
-    let acum = 0;
-    let val = tam;
-    for (let i = 0; i < verts.length / 3; i ++) {
-        val /= 2;
-        acum += val;
-    }
-
-    piso(gl, iteracionesTotales, x, -acum, y,tam);
-
+    // crea los indices
     for (let i = 0; i < verts.length; i += 3) {
         pyramidIndices.push(i, i + 1, i + 2);
     }
