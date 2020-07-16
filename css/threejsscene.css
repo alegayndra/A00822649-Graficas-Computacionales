@@ -58,4 +58,14 @@
 	background: #ffffff;
 }
 
+#buttons > input {
+	margin: 15px;
+	position: absolute;
+	top:620px;
+	width: 100px;
+	height: 35px;
+	border: 0px linen dotted;
+	border-radius: 10px;
+}
+
 

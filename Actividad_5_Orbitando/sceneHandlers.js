@@ -4,10 +4,12 @@ let mouseDown = false, pageX = 0, pageY = 0;
 
 function rotateScene(deltax, deltay, group)
 {
-    group.rotation.y += deltax / 100;
-    group.rotation.x += deltay / 100;
-    // console.log(group.rotation.y, group.rotation.x);
-    $("#rotation").html("rotation: " + group.rotation.x.toFixed(1) + "," + group.rotation.y.toFixed(1) + ",0");
+    if (group) {
+        group.rotation.y += deltax / 100;
+        group.rotation.x += deltay / 100;
+        // console.log(group.rotation.y, group.rotation.x);
+        $("#rotation").html("rotation: " + group.rotation.x.toFixed(1) + "," + group.rotation.y.toFixed(1) + ",0");
+    }
 }
 
 function scaleScene(scale, group)
@@ -18,8 +20,9 @@ function scaleScene(scale, group)
 
 function onMouseMove(evt, group)
 {
-    if (!mouseDown)
+    if (!mouseDown || !group)
         return;
+    
     
     // The preventDefault() method cancels the event if it is cancelable, meaning that the default action that belongs to the event will not occur.
     evt.preventDefault();
@@ -32,8 +35,7 @@ function onMouseMove(evt, group)
     rotateScene(deltax, deltay, group);
 }
 
-function onMouseDown(evt)
-{
+function onMouseDown(evt) {
     evt.preventDefault();
     
     mouseDown = true;
@@ -41,18 +43,40 @@ function onMouseDown(evt)
     pageY = evt.pageY;
 }
 
-function onMouseUp(evt)
-{
+function onMouseUp(evt) {
     evt.preventDefault();
     
     mouseDown = false;
 }
 
-function addMouseHandler(canvas, group)
-{
+function add(evt) {
+    evt.preventDefault();
+
+    createObject();
+}
+
+function satellite(evt) {
+    evt.preventDefault();
+
+    createSatellite();
+}
+
+function clear(evt) {
+    evt.preventDefault();
+
+    clearGroup(initialGroup);
+}
+
+function addMouseHandler(canvas, group) {
     canvas.addEventListener( 'mousemove', e => onMouseMove(e, group), false);
     canvas.addEventListener( 'mousedown', e => onMouseDown(e), false );
     document.addEventListener( 'mouseup',  e => onMouseUp(e), false );
 
     $("#slider").on("slide", (e, u) => scaleScene(u.value, group));
+}
+
+function buttonHandlers() {    
+    $("#add").on("click", (e) => add(e));
+    $("#satellite").on("click", (e) => satellite(e));
+    $("#clear").on("click", (e) => clear(e));
 }
