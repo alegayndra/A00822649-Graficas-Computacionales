@@ -100,7 +100,8 @@ function createObject() {
     } else {
         let angle = (Math.random() * Math.PI * 2);
         let r = 7;
-        cube.position.set(Math.sin(angle) * r, 0, Math.cos(angle) * r);
+        let y = Math.round(Math.random() * 4) - 2;
+        cube.position.set(Math.sin(angle) * r, y, Math.cos(angle) * r);
         centerObject.add(cube);
     }
 
@@ -118,10 +119,15 @@ function loadMeshes() {
     meshes.push(new THREE.CubeGeometry(2, 2, 2));
     meshes.push(new THREE.CylinderGeometry(0, 1, 2, 20, 10));
     meshes.push(new THREE.SphereGeometry(1, 20, 20));
+    meshes.push(new THREE.DodecahedronGeometry(1, 0));
+    meshes.push(new THREE.TorusGeometry( 1, 0.4, 16, 100 ));
 
-    satelites.push(new THREE.CubeGeometry(1, 1, 1));
+    satelites.push(new THREE.CubeGeometry(0.7, 0.7, 0.7));
     satelites.push(new THREE.CylinderGeometry(0, .333, .444, 20, 5));
     satelites.push(new THREE.SphereGeometry(0.5, 20, 20));
+    satelites.push(new THREE.DodecahedronGeometry(0.5, 0));
+    satelites.push(new THREE.TorusGeometry( 0.5, 0.1, 16, 100 ));
+
 }
 
 function createScene(canvas) {    
