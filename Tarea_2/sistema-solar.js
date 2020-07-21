@@ -58,7 +58,7 @@ function animate() {
     let angle = Math.PI * 2 * fract;
 
     // // Rotate the cube about its Y axis
-    Sol.rotation.y += angle;
+    // Sol.rotation.y += angle;
     Sol.children.forEach(child => animateChildren(child, angle / 2));
 }
 
@@ -149,53 +149,48 @@ function run() {
 
 // }
 
+function planet(map, bump, radius) {
+    let text = new THREE.TextureLoader().load(map);
+    let bumpMap = new THREE.TextureLoader().load(bump) || null;
+    let material = new THREE.MeshPhongMaterial({ map: text, bumpMap: bumpMap, bumpScale: 0.06 });
+    let geometry = new THREE.SphereGeometry(radius, 20, 20);
+    return new THREE.Mesh(geometry, material);
+}
+
 function createPlanets() {
-    let text = null;
-    let material = null;
-    let geometry = null;
+    // let text = null;
+    // let material = null;
+    // let geometry = null;
+    // let bumpMap = null;
     // Sol -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/sun/sun_texture.jpg");
-    material = new THREE.MeshBasicMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1.5, 20, 20);
+    let text = new THREE.TextureLoader().load("images/sun/sun_texture.jpg");
+    let material = new THREE.MeshBasicMaterial({ map: text });
+    let geometry = new THREE.SphereGeometry(1.5, 20, 20);
     Sol = new THREE.Mesh(geometry, material);
     scene.add(Sol);
 
     // Mercurio -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/mercury/mercurymap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Mercurio = new THREE.Mesh(geometry, material);
+    Mercurio = planet("images/mercury/mercurymap.jpg", "images/mercury/mercurybump.jpg", 1);
     Mercurio.position.z = 10
     Sol.add(Mercurio);
 
     // Venus -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/venus/venusmap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Venus = new THREE.Mesh(geometry, material);
+    Venus = planet("images/venus/venusmap.jpg", "images/venus/venusbump.jpg", 1);
     Venus.position.x = 10
     Sol.add(Venus);
 
     // Tierra -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/earth/earthmap1k.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Tierra = new THREE.Mesh(geometry, material);
+    Tierra = planet("images/earth/earthmap1k.jpg", "images/earth/earthbump1k.jpg", 1);
     Tierra.position.x = -10
-
-    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(0.5, 20, 20);
-    Luna = new THREE.Mesh(geometry, material);
+    
+    Luna = planet("images/earth/moonmap1k.jpg", "images/earth/moon_bump.jpg", 0.5);
     Luna.position.x = 2;
+
     Tierra.add(Luna);
     Sol.add(Tierra);
 
     // Marte -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/mars/mars_1k_color.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Marte = new THREE.Mesh(geometry, material);
+    Marte = planet("images/mars/mars_1k_color.jpg", "images/earth/moon_bump.jpg", 1);
     Marte.position.z = -10
     Sol.add(Marte);
 
@@ -208,42 +203,27 @@ function createPlanets() {
     // Sol.add(Asteroides);
 
     // Jupiter -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/jupiter/jupitermap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Jupiter = new THREE.Mesh(geometry, material);
+    Jupiter = planet("images/jupiter/jupitermap.jpg", '', 1);
     Jupiter.position.z = -5
     Sol.add(Jupiter);
 
     // Saturno -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/saturn/saturnmap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Saturno = new THREE.Mesh(geometry, material);
+    Saturno = planet("images/saturn/saturnmap.jpg", '', 1);
     Saturno.position.z = 5
     Sol.add(Saturno);
 
     // Urano -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/uranus/uranusmap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Urano = new THREE.Mesh(geometry, material);
+    Urano = planet("images/uranus/uranusmap.jpg", '', 1);
     Urano.position.x = 5
     Sol.add(Urano);
 
     // Neptuno -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/neptune/neptunemap.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Neptuno = new THREE.Mesh(geometry, material);
+    Neptuno = planet("images/neptune/neptunemap.jpg", '', 1);
     Neptuno.position.x = -5
     Sol.add(Neptuno);
 
     // Pluton -------------------------------------------------------------------------------
-    text = new THREE.TextureLoader().load("images/pluto/plutomap1k.jpg");
-    material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(1, 20, 20);
-    Mercurio = new THREE.Mesh(geometry, material);
+    Mercurio = planet("images/pluto/plutomap1k.jpg", "images/pluto/plutobump1k.jpg", 1);
     Mercurio.position.x = 15
     Sol.add(Mercurio);
 
@@ -277,11 +257,6 @@ function createScene(canvas) {
     
     // Position the light out from the scene, pointing at the origin
     scene.add(light);
-    
-    // This light globally illuminates all objects in the scene equally.
-    // Cannot cast shadows
-    // let ambientLight = new THREE.AmbientLight(0xffccaa, 0.2);
-    // scene.add(ambientLight);
 
     createPlanets();
 }
