@@ -2,21 +2,6 @@ let renderer = null, scene = null, camera = null, controls = null;
 
 let initialGroup = null, centerObject = null, lastObject = null;
 
-/*
-    Lista de planetas
-    - Sol
-    - Mercurio
-    - Venus
-    - Tierra
-    - Marte
-    - Anillo de asteroides
-    - Jupiter
-    - Saturno
-    - Urano
-    - Neptuno
-    - Pluton
-*/
-
 let Sol = null;
 let Mercurio = null;
 let Venus = null;
@@ -37,7 +22,6 @@ function animateChildren(object, angle) {
     object.children.forEach(child => animateChildren(child, angle / 2));
     
 }
-
 
 function animate() {
     let now = Date.now();
@@ -63,7 +47,6 @@ function run() {
     animate();
 }
 
-let circle;
 
 function posPlanet(planet, pos) {
     let val = (Math.random() * Math.PI * 2);
@@ -73,26 +56,17 @@ function posPlanet(planet, pos) {
     let y = Math.random() * n - (n / 2)
     planet.position.y = y;
 
-    let segments = 64;
-    let r = Math.random();
-    let g = Math.random();
-    let b = Math.random();
     let material = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
-    let geometry = new THREE.CircleGeometry( pos, segments );
+    let geometry = new THREE.CircleGeometry( pos, 64 );
 
     // Remove center vertex
     geometry.vertices.shift();
 
-    // circle = new THREE.Line( geometry, material );
     circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
     circle.position.y = y;
 
-    // Non closed circle with one open segment:
     scene.add( circle );
-
-    // To get a closed circle use LineLoop instead (see also @jackrugile his comment):
-    // scene.add( new THREE.LineLoop( geometry, material ) );
 }
 
 function planet(map, bump, radius) {
@@ -112,7 +86,6 @@ function createPlanets() {
     scene.add(Sol);
 
     let pos = 5;
-    let circle;
 
     // Mercurio -------------------------------------------------------------------------------
     Mercurio = planet("images/mercury/mercurymap.jpg", "images/mercury/mercurybump.jpg", 0.6);
@@ -151,6 +124,7 @@ function createPlanets() {
 
     lun2.position.x = -1.5;
     lun2.position.y = -0.5;
+    
     Marte.add(lun1);
     Marte.add(lun2);
     Sol.add(Marte);
