@@ -63,12 +63,36 @@ function run() {
     animate();
 }
 
+let circle;
+
 function posPlanet(planet, pos) {
     let val = (Math.random() * Math.PI * 2);
     planet.position.x = Math.cos(val) * pos;
     planet.position.z = Math.sin(val) * pos;
     let n = 5;
-    planet.position.y = Math.random() * n - (n / 2);
+    let y = Math.random() * n - (n / 2)
+    planet.position.y = y;
+
+    let segments = 64;
+    let r = Math.random();
+    let g = Math.random();
+    let b = Math.random();
+    let material = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
+    let geometry = new THREE.CircleGeometry( pos, segments );
+
+    // Remove center vertex
+    geometry.vertices.shift();
+
+    // circle = new THREE.Line( geometry, material );
+    circle = new THREE.LineLoop( geometry, material );
+    circle.rotation.x = -Math.PI / 2;
+    circle.position.y = y;
+
+    // Non closed circle with one open segment:
+    scene.add( circle );
+
+    // To get a closed circle use LineLoop instead (see also @jackrugile his comment):
+    // scene.add( new THREE.LineLoop( geometry, material ) );
 }
 
 function planet(map, bump, radius) {
@@ -88,6 +112,7 @@ function createPlanets() {
     scene.add(Sol);
 
     let pos = 5;
+    let circle;
 
     // Mercurio -------------------------------------------------------------------------------
     Mercurio = planet("images/mercury/mercurymap.jpg", "images/mercury/mercurybump.jpg", 0.6);
@@ -135,10 +160,10 @@ function createPlanets() {
     // Asteroides -------------------------------------------------------------------------------
     Asteroides = new THREE.Object3D();
     let num = 120;
+    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
+    material = new THREE.MeshPhongMaterial({ map: text });
+    geometry = new THREE.SphereGeometry(0.2, 20, 20);
     for (let i = 0; i < num; i++) {
-        text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
-        material = new THREE.MeshPhongMaterial({ map: text });
-        geometry = new THREE.SphereGeometry(0.2, 20, 20);
         let obj = new THREE.Mesh(geometry, material);
         let val = Math.PI * 2 / num * i;
         obj.position.x = Math.cos(val) * pos;
@@ -147,6 +172,7 @@ function createPlanets() {
         obj.position.y = Math.random() * n - (n / 2);
         Asteroides.add(obj);
     }
+
     Sol.add(Asteroides);
 
     pos += 5;
@@ -161,14 +187,43 @@ function createPlanets() {
     // Saturno -------------------------------------------------------------------------------
     Saturno = planet("images/saturn/saturnmap.jpg", '', 2);
     posPlanet(Saturno, pos);
+
+    num = 50;
+    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
+    material = new THREE.MeshPhongMaterial({ map: text });
+    geometry = new THREE.SphereGeometry(0.1, 20, 20);
+    for (let i = 0; i < num; i++) {
+        let obj = new THREE.Mesh(geometry, material);
+        let val = Math.PI * 1.5 / num * i;
+        obj.position.x = Math.cos(val) * 2.5;
+        obj.position.z = Math.sin(val) * 2.5;
+        let n = 0.5;
+        obj.position.y = Math.random() * n - (n / 2);
+        Saturno.add(obj);
+    }
+
     Sol.add(Saturno);
 
     pos += 5;
 
     // Urano -------------------------------------------------------------------------------
     Urano = planet("images/uranus/uranusmap.jpg", '', 0.8);
-    Urano.position.x = pos;
-    posPlanet(Mercurio, pos);
+    posPlanet(Urano, pos);
+
+    num = 30;
+    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
+    material = new THREE.MeshPhongMaterial({ map: text });
+    geometry = new THREE.SphereGeometry(0.1, 20, 20);
+    for (let i = 0; i < num; i++) {
+        let obj = new THREE.Mesh(geometry, material);
+        let val = Math.PI * 2 / num * i;
+        obj.position.x = Math.cos(val) * 1.5;
+        obj.position.z = Math.sin(val) * 1.5;
+        let n = 0.5;
+        obj.position.y = Math.random() * n - (n / 2);
+        Urano.add(obj);
+    }
+
     Sol.add(Urano);
 
     pos += 5;
@@ -181,7 +236,7 @@ function createPlanets() {
     pos += 5;
 
     // Pluton -------------------------------------------------------------------------------
-    Pluton = planet("images/pluto/plutomap1k.jpg", "images/pluto/plutobump1k.jpg", 0.3);
+    Pluton = planet("images/pluto/plutomap1k.jpg", "images/pluto/plutobump1k.jpg", 0.5);
     posPlanet(Pluton, pos);
     Sol.add(Pluton);
 
