@@ -1,4 +1,9 @@
-let renderer = null, scene = null, camera = null;
+// import { OrbitControls } from 'https://unpkg.com/three@0.118.3/examples/jsm/controls/OrbitControls.js';
+// import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/build/three.module.js';
+// import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/controls/OrbitControls.js';
+// import {GUI} from 'https://threejsfundamentals.org/threejs/../3rdparty/dat.gui.module.js';
+
+let renderer = null, scene = null, camera = null, controls = null;
 // cube = null,
 // sphere = null,
 // cone = null,
@@ -48,6 +53,8 @@ function animate() {
 function run() {
     requestAnimationFrame(function() { run(); });
     
+    // controls.update();
+
     // Render the scene
     renderer.render( scene, camera );
 
@@ -147,6 +154,10 @@ function createScene(canvas) {
     // Add  a camera so we can view the scene
     camera = new THREE.PerspectiveCamera( 45, canvas.width / canvas.height, 1, 4000 );
     camera.position.z = 10;
+
+    // controls = new OrbitControls( camera, renderer.domElement );
+    // controls.update();
+
     scene.add(camera);
 
     // Add a directional light to show off the objects
@@ -177,4 +188,8 @@ function createScene(canvas) {
     buttonHandlers();
     addMouseHandler(canvas, initialGroup);
     // addMouseHandler(canvas, centerObject);
+
+    return 0;
 }
+
+window.createScene = createScene();
