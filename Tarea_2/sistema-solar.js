@@ -54,7 +54,7 @@ function posPlanet(planet, pos) {
     planet.position.z = Math.sin(val) * pos;
     let n = 5;
     let y = Math.random() * n - (n / 2)
-    planet.position.y = y;
+    // planet.position.y = y;
 
     let material = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
     let geometry = new THREE.CircleGeometry( pos, 64 );
@@ -64,7 +64,7 @@ function posPlanet(planet, pos) {
 
     circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
-    circle.position.y = y;
+    // circle.position.y = y;
 
     scene.add( circle );
 }
@@ -81,43 +81,43 @@ function createPlanets() {
     // Sol -------------------------------------------------------------------------------
     let text = new THREE.TextureLoader().load("images/sun/sun_texture.jpg");
     let material = new THREE.MeshBasicMaterial({ map: text });
-    let geometry = new THREE.SphereGeometry(1.5, 20, 20);
+    let geometry = new THREE.SphereGeometry(2.5, 20, 20);
     Sol = new THREE.Mesh(geometry, material);
     scene.add(Sol);
 
     let pos = 5;
 
     // Mercurio -------------------------------------------------------------------------------
-    Mercurio = planet("images/mercury/mercurymap.jpg", "images/mercury/mercurybump.jpg", 0.6);
+    Mercurio = planet("images/mercury/mercurymap.jpg", "images/mercury/mercurybump.jpg", 1);
     posPlanet(Mercurio, pos);
     Sol.add(Mercurio);
 
-    pos += 5;
+    pos += 3.5;
 
     // Venus -------------------------------------------------------------------------------
-    Venus = planet("images/venus/venusmap.jpg", "images/venus/venusbump.jpg", 0.6);
+    Venus = planet("images/venus/venusmap.jpg", "images/venus/venusbump.jpg", 1);
     posPlanet(Venus, pos);
     Sol.add(Venus);
 
-    pos += 5;
+    pos += 3.5;
 
     // Tierra -------------------------------------------------------------------------------
-    Tierra = planet("images/earth/earthmap1k.jpg", "images/earth/earthbump1k.jpg", 0.8);
+    Tierra = planet("images/earth/earthmap1k.jpg", "images/earth/earthbump1k.jpg", 1.2);
     posPlanet(Tierra, pos);
     
-    Luna = planet("images/earth/moonmap1k.jpg", "images/earth/moon_bump.jpg", 0.3);
-    Luna.position.x = 1.5;
+    Luna = planet("images/earth/moonmap1k.jpg", "images/earth/moon_bump.jpg", 0.6);
+    Luna.position.x = 2;
     Luna.position.y = 0.5;
 
     Tierra.add(Luna);
     Sol.add(Tierra);
 
-    pos += 5;
+    pos += 3.5;
 
     // Marte -------------------------------------------------------------------------------
-    Marte = planet("images/mars/mars_1k_color.jpg", 'images/mars/marsbump1k.jpg', 0.6);
-    let lun1 = planet("images/mars/deimosbump.jpg", 'images/mars/deimosbump.jpg', 0.3);
-    let lun2 = planet("images/mars/phobosbump.jpg", 'images/mars/phobosbump.jpg', 0.3);
+    Marte = planet("images/mars/mars_1k_color.jpg", 'images/mars/marsbump1k.jpg', 1);
+    let lun1 = planet("images/mars/deimosbump.jpg", 'images/mars/deimosbump.jpg', 0.6);
+    let lun2 = planet("images/mars/phobosbump.jpg", 'images/mars/phobosbump.jpg', 0.6);
     posPlanet(Marte, pos);
     lun1.position.x = 1.5;
     lun1.position.y = 0.5;
@@ -149,28 +149,41 @@ function createPlanets() {
 
     Sol.add(Asteroides);
 
-    pos += 5;
+    let mat = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
+    let geo = new THREE.CircleGeometry( pos, 64 );
+
+    // Remove center vertex
+    geo.vertices.shift();
+
+    circle = new THREE.LineLoop( geo, mat );
+    circle.rotation.x = -Math.PI / 2;
+    // circle.position.y = y;
+
+    scene.add( circle );
+
+    pos += 10;
 
     // Jupiter -------------------------------------------------------------------------------
-    Jupiter = planet("images/jupiter/jupitermap.jpg", '', 2);
+    Jupiter = planet("images/jupiter/jupitermap.jpg", '', 3);
     posPlanet(Jupiter, pos);
     Sol.add(Jupiter);
 
-    pos += 5;
+    pos += 10;
 
     // Saturno -------------------------------------------------------------------------------
-    Saturno = planet("images/saturn/saturnmap.jpg", '', 2);
+    Saturno = planet("images/saturn/saturnmap.jpg", '', 3);
     posPlanet(Saturno, pos);
 
     num = 50;
     text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
     material = new THREE.MeshPhongMaterial({ map: text });
-    geometry = new THREE.SphereGeometry(0.1, 20, 20);
+    geometry = new THREE.SphereGeometry(0.2, 20, 20);
     for (let i = 0; i < num; i++) {
         let obj = new THREE.Mesh(geometry, material);
         let val = Math.PI * 1.5 / num * i;
-        obj.position.x = Math.cos(val) * 2.5;
-        obj.position.z = Math.sin(val) * 2.5;
+        let r = 3.5;
+        obj.position.x = Math.cos(val) * r;
+        obj.position.z = Math.sin(val) * r;
         let n = 0.5;
         obj.position.y = Math.random() * n - (n / 2);
         Saturno.add(obj);
@@ -178,10 +191,10 @@ function createPlanets() {
 
     Sol.add(Saturno);
 
-    pos += 5;
+    pos += 8;
 
     // Urano -------------------------------------------------------------------------------
-    Urano = planet("images/uranus/uranusmap.jpg", '', 0.8);
+    Urano = planet("images/uranus/uranusmap.jpg", '', 1.2);
     posPlanet(Urano, pos);
 
     num = 30;
@@ -191,8 +204,9 @@ function createPlanets() {
     for (let i = 0; i < num; i++) {
         let obj = new THREE.Mesh(geometry, material);
         let val = Math.PI * 2 / num * i;
-        obj.position.x = Math.cos(val) * 1.5;
-        obj.position.z = Math.sin(val) * 1.5;
+        let r = 1.8;
+        obj.position.x = Math.cos(val) * r;
+        obj.position.z = Math.sin(val) * r;
         let n = 0.5;
         obj.position.y = Math.random() * n - (n / 2);
         Urano.add(obj);
@@ -203,14 +217,14 @@ function createPlanets() {
     pos += 5;
 
     // Neptuno -------------------------------------------------------------------------------
-    Neptuno = planet("images/neptune/neptunemap.jpg", '', 0.7);
+    Neptuno = planet("images/neptune/neptunemap.jpg", '', 1);
     posPlanet(Neptuno, pos);
     Sol.add(Neptuno);
 
     pos += 5;
 
     // Pluton -------------------------------------------------------------------------------
-    Pluton = planet("images/pluto/plutomap1k.jpg", "images/pluto/plutobump1k.jpg", 0.5);
+    Pluton = planet("images/pluto/plutomap1k.jpg", "images/pluto/plutobump1k.jpg", 0.7);
     posPlanet(Pluton, pos);
     Sol.add(Pluton);
 
@@ -240,7 +254,7 @@ function createScene(canvas) {
     scene.add(camera);
 
     // Add a directional light to show off the objects
-    let light = new THREE.PointLight(0xffffff, 1.5, 70);
+    let light = new THREE.PointLight(0xffffff, 2.5, 70);
     
     // Position the light out from the scene, pointing at the origin
     scene.add(light);
