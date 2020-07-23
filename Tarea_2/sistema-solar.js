@@ -1,6 +1,6 @@
 let renderer = null, scene = null, camera = null, controls = null;
 
-let initialGroup = null, centerObject = null, lastObject = null;
+// let initialGroup = null, centerObject = null, lastObject = null;
 
 let Sol = null;
 let Mercurio = null;
@@ -28,11 +28,11 @@ function animate() {
     let deltat = now - currentTime;
     currentTime = now;
     let fract = deltat / duration;
-    let angle = Math.PI * 2 * fract;
+    let angle = Math.PI * fract;
 
     // // Rotate the cube about its Y axis
     Sol.rotation.y += angle;
-    Sol.children.forEach(child => animateChildren(child, angle / 2));
+    Sol.children.forEach(child => animateChildren(child, angle * 2));
 }
 
 function run() {
@@ -62,7 +62,7 @@ function posPlanet(planet, pos) {
     // Remove center vertex
     geometry.vertices.shift();
 
-    circle = new THREE.LineLoop( geometry, material );
+    let circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
     // circle.position.y = y;
 
@@ -155,7 +155,7 @@ function createPlanets() {
     // Remove center vertex
     geo.vertices.shift();
 
-    circle = new THREE.LineLoop( geo, mat );
+    let circle = new THREE.LineLoop( geo, mat );
     circle.rotation.x = -Math.PI / 2;
     // circle.position.y = y;
 
@@ -166,6 +166,22 @@ function createPlanets() {
     // Jupiter -------------------------------------------------------------------------------
     Jupiter = planet("images/jupiter/jupitermap.jpg", '', 3);
     posPlanet(Jupiter, pos);
+
+    num = 63;
+    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
+    material = new THREE.MeshPhongMaterial({ map: text });
+    geometry = new THREE.SphereGeometry(0.2, 20, 20);
+    for (let i = 0; i < num; i++) {
+        let obj = new THREE.Mesh(geometry, material);
+        let val = Math.PI * 2 / num * i;
+        let r = 4.5;
+        obj.position.x = Math.cos(val) * r;
+        obj.position.z = Math.sin(val) * r;
+        let n = 0.5;
+        obj.position.y = Math.random() * n - (n / 2);
+        Jupiter.add(obj);
+    }
+
     Sol.add(Jupiter);
 
     pos += 10;
@@ -174,20 +190,26 @@ function createPlanets() {
     Saturno = planet("images/saturn/saturnmap.jpg", '', 3);
     posPlanet(Saturno, pos);
 
-    num = 50;
+    num = 62;
     text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
     material = new THREE.MeshPhongMaterial({ map: text });
     geometry = new THREE.SphereGeometry(0.2, 20, 20);
     for (let i = 0; i < num; i++) {
         let obj = new THREE.Mesh(geometry, material);
-        let val = Math.PI * 1.5 / num * i;
-        let r = 3.5;
+        let val = Math.PI * 2 / num * i;
+        let r = 4;
         obj.position.x = Math.cos(val) * r;
         obj.position.z = Math.sin(val) * r;
-        let n = 0.5;
+        let n = 2;
         obj.position.y = Math.random() * n - (n / 2);
         Saturno.add(obj);
     }
+
+    geo = new THREE.RingGeometry( 4, 6, 32 );
+    mat = new THREE.MeshBasicMaterial( { color: 0x1ec6ff, side: THREE.DoubleSide } );
+    let anillo = new THREE.Mesh( geo, mat );
+    anillo.rotation.x = Math.PI / 4;
+    Saturno.add( anillo );
 
     Sol.add(Saturno);
 
@@ -197,20 +219,32 @@ function createPlanets() {
     Urano = planet("images/uranus/uranusmap.jpg", '', 1.2);
     posPlanet(Urano, pos);
 
-    num = 30;
+    num = 27;
     text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
     material = new THREE.MeshPhongMaterial({ map: text });
     geometry = new THREE.SphereGeometry(0.1, 20, 20);
     for (let i = 0; i < num; i++) {
         let obj = new THREE.Mesh(geometry, material);
         let val = Math.PI * 2 / num * i;
-        let r = 1.8;
+        let r = 2;
         obj.position.x = Math.cos(val) * r;
         obj.position.z = Math.sin(val) * r;
         let n = 0.5;
         obj.position.y = Math.random() * n - (n / 2);
         Urano.add(obj);
     }
+
+    mat = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
+    geo = new THREE.CircleGeometry( 2, 64 );
+
+    // Remove center vertex
+    geo.vertices.shift();
+
+    circle = new THREE.LineLoop( geo, mat );
+    circle.rotation.x = (Math.PI / 2); //+ (Math.PI / 16);
+    // circle.position.y = y;
+
+    Urano.add( circle );
 
     Sol.add(Urano);
 
@@ -219,6 +253,22 @@ function createPlanets() {
     // Neptuno -------------------------------------------------------------------------------
     Neptuno = planet("images/neptune/neptunemap.jpg", '', 1);
     posPlanet(Neptuno, pos);
+
+    num = 13;
+    text = new THREE.TextureLoader().load("images/earth/moonmap1k.jpg");
+    material = new THREE.MeshPhongMaterial({ map: text });
+    geometry = new THREE.SphereGeometry(0.2, 20, 20);
+    for (let i = 0; i < num; i++) {
+        let obj = new THREE.Mesh(geometry, material);
+        let val = Math.PI * 2 / num * i;
+        let r = 2;
+        obj.position.x = Math.cos(val) * r;
+        obj.position.z = Math.sin(val) * r;
+        let n = 0.5;
+        obj.position.y = Math.random() * n - (n / 2);
+        Neptuno.add(obj);
+    }
+
     Sol.add(Neptuno);
 
     pos += 5;
