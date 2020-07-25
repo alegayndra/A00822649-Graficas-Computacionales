@@ -109,14 +109,14 @@ function createPlanets() {
     let pos = 5;
 
     // Mercurio -------------------------------------------------------------------------------
-    group = createPlanet(pos, 1, 'images/mercury/mercurymap.jpg', 'images/mercury/mercurybump.jpg', 0, 0, 0, Math.PI, null);
+    group = createPlanet(pos, 1, 'images/mercury/mercurymap.jpg', 'images/mercury/mercurybump.jpg', 0, 0, 0, Math.PI * 2.5, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
     pos += 3.5;
 
     // Venus -------------------------------------------------------------------------------
-    group = createPlanet(pos, 1, 'images/venus/venusmap.jpg', 'images/venus/venusbump.jpg', 0, 0, 0, Math.PI, null);
+    group = createPlanet(pos, 1, 'images/venus/venusmap.jpg', 'images/venus/venusbump.jpg', 0, 0, 0, Math.PI * 2, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
@@ -124,14 +124,14 @@ function createPlanets() {
 
     // Tierra -------------------------------------------------------------------------------
 
-    group = createPlanet(pos, 1.2, 'images/earth/earthmap1k.jpg', 'images/earth/earthbump1k.jpg', 1, 0.6, 2, Math.PI, null);
+    group = createPlanet(pos, 1.2, 'images/earth/earthmap1k.jpg', 'images/earth/earthbump1k.jpg', 1, 0.6, 2, Math.PI * 1.7, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
     pos += 3.5;
 
     // Marte -------------------------------------------------------------------------------
-    group = createPlanet(pos, 1, 'images/mars/mars_1k_color.jpg', 'images/mars/marsbump1k.jpg', 2, 0.6, 1.5, Math.PI, null);
+    group = createPlanet(pos, 1, 'images/mars/mars_1k_color.jpg', 'images/mars/marsbump1k.jpg', 2, 0.6, 1.5, Math.PI * 1.4, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
@@ -173,7 +173,7 @@ function createPlanets() {
     pos += 10;
 
     // Jupiter -------------------------------------------------------------------------------
-    group = createPlanet(pos, 3, 'images/mars/mars_1k_color.jpg', 'images/mars/marsbump1k.jpg', 63, 0.2, 4.5, Math.PI, null);
+    group = createPlanet(pos, 3, 'images/mars/mars_1k_color.jpg', 'images/mars/marsbump1k.jpg', 63, 0.2, 4.5, Math.PI * 1.2, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
@@ -185,7 +185,7 @@ function createPlanets() {
     let anillo = new THREE.Mesh( geo, mat );
     anillo.rotation.x = Math.PI / 4;
 
-    group = createPlanet(pos, 3, 'images/saturn/saturnmap.jpg', '', 62, 0.2, 4.5, Math.PI, anillo);
+    group = createPlanet(pos, 3, 'images/saturn/saturnmap.jpg', '', 62, 0.2, 4.5, Math.PI * 1.2, anillo);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
@@ -205,14 +205,14 @@ function createPlanets() {
     pos += 5;
 
     // Neptuno -------------------------------------------------------------------------------
-    group = createPlanet(pos, 1, 'images/neptune/neptunemap.jpg', '', 13, 0.2, 2, Math.PI, null);
+    group = createPlanet(pos, 1, 'images/neptune/neptunemap.jpg', '', 13, 0.2, 2, Math.PI * 0.8, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
     pos += 5;
 
     // Pluton -------------------------------------------------------------------------------
-    group = createPlanet(pos, 0.7, 'images/pluto/plutomap1k.jpg', 'images/pluto/plutobump1k.jpg', 0, 0, 0, Math.PI, null);
+    group = createPlanet(pos, 0.7, 'images/pluto/plutomap1k.jpg', 'images/pluto/plutobump1k.jpg', 0, 0, 0, Math.PI * 0.6, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
