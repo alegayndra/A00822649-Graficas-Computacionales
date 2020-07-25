@@ -1,28 +1,9 @@
 let renderer = null, scene = null, camera = null, controls = null;
 
-// let initialGroup = null, centerObject = null, lastObject = null;
-
-let Sol = null;
-let Mercurio = null;
-let Venus = null;
-let Tierra = null, Luna = null;
-let Marte = null;
-let Asteroides = null;
-let Jupiter = null;
-let Saturno = null;
-let Urano = null;
-let Neptuno = null;
-let Pluton = null;
-
 let groups = [];
 
 let duration = 5000; // ms
 let currentTime = Date.now();
-
-// function animateChildren(object, angle) {
-//     object.rotation.y += angle;
-//     object.children.forEach(child => animateChildren(child, angle / 2));
-// }
 
 let moonMap = 'images/earth/moonmap1k.jpg';
 let moonBump = 'images/earth/moon_bump.jpg';
@@ -32,7 +13,6 @@ function animate() {
     let deltat = now - currentTime;
     currentTime = now;
     let fract = deltat / duration;
-    // let angle = Math.PI * fract;
 
     groups.forEach(group => {
         group.animate(fract);
@@ -41,38 +21,49 @@ function animate() {
 
 function run() {
     requestAnimationFrame(function() { run(); });
-    
     controls.update();
-
-    // Render the scene
     renderer.render( scene, camera );
-
-    // Spin the cube for next frame
     animate();
 }
 
+/*
+    Crea un planeta nuevo
+    Entrada:
+    - pos:          Distancia desde el centro del sol donde el planeta estará
+    - radius:       Radio del planeta
+    - planetMap:    Textura del planeta
+    - planetBump    Textura del planeta para los bumps
+    - cantMoons:    Cantidad de lunas que tiene cada planeta
+    - moonRadius:   Radio de las lunas en sí
+    - moonDistance: Distancia desde el centro del planeta donde las lunas estarán
+    - translation:  Velocidad a la que el planeta se trasladara en su orbita
+    - extra:        Objeto extra utlizado para cualquier cosa única de los planetas (ejemplo: el anillo de asteroides de Saturno)
+    Salida: objeto de tipo Planet, que guarda toda la información de cada planeta
+*/
 function createPlanet(pos, radius, planetMap, planetBump, cantMoons, moonRadius, moonDistance, translation, extra) {
 
+    // Se crea el planeta en sí
     let textureMap = new THREE.TextureLoader().load(planetMap) || null;
-    let bumpMap = new THREE.TextureLoader().load(planetBump) || null;
-    
+    let bumpMap = new THREE.TextureLoader().load(planetBump) || null;    
     let material = new THREE.MeshPhongMaterial({ map: textureMap, bumpMap: bumpMap, bumpScale: 0.4 });
     let geometry = new THREE.SphereGeometry(radius, 20, 20);
-    
     let planet = new THREE.Mesh(geometry, material);
 
+    // Se posiciona el planeta en una posición random de su orbita
     let val = (Math.random() * Math.PI * 2);
     planet.position.x = Math.cos(val) * pos;
     planet.position.z = Math.sin(val) * pos;
     
+    // Se crean el material y geometría de las lunas
     textureMap = new THREE.TextureLoader().load(moonMap);
     bumpMap = new THREE.TextureLoader().load(moonBump) || null;
-    
     material = new THREE.MeshPhongMaterial({ map: textureMap, bumpMap: bumpMap, bumpScale: 0.4 });
     geometry = new THREE.SphereGeometry(moonRadius, 20, 20);
     
+    // Arreglo que guardará las lunas del planeta
     let moons = [];
 
+    // Se crean las lunas del planeta y se posicionan aleatoriamente alrededor del planeta
     for (let i = 0; i < cantMoons; i++) {
         let moon = new THREE.Mesh(geometry, material);
         let val = Math.PI * 2 / cantMoons * i;
@@ -83,26 +74,26 @@ function createPlanet(pos, radius, planetMap, planetBump, cantMoons, moonRadius,
         moons.push(moon);
     }
 
-    // orbit
+    // Se crea un circulo para mostrar la orbita del planeta
     material = new THREE.LineBasicMaterial( { color: Math.random() * 0xffffff } ); 
     geometry = new THREE.CircleGeometry( pos, 64 );
-
-    // Remove center vertex
     geometry.vertices.shift();
-
     let circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
 
-    return new Planet(planet, new THREE.Object3D, moons, Math.PI * 1.5, circle, translation, extra);
+    return new Planet(planet, moons, Math.PI * 1.5, circle, translation, extra);
 }
 
+/*
+    Se crean todos los planetas
+*/
 function createPlanets() {
     // Sol -------------------------------------------------------------------------------
     let text = new THREE.TextureLoader().load("images/sun/sun_texture.jpg");
     let material = new THREE.MeshBasicMaterial({ map: text });
     let geometry = new THREE.SphereGeometry(2.5, 20, 20);
     Sol = new THREE.Mesh(geometry, material);
-    let group = new Planet(Sol, new THREE.Object3D, [], Math.PI, null, 0, null);
+    let group = new Planet(Sol, [], Math.PI, null, 0, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
@@ -166,7 +157,7 @@ function createPlanets() {
     let circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
 
-    group = new Planet(new THREE.Object3D, new THREE.Object3D, moons, Math.PI, circle, 0, null);
+    group = new Planet(new THREE.Object3D, moons, Math.PI, circle, 0, null);
     groups.push(group);
     scene.add(groups[groups.length - 1].center);
 
