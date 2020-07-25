@@ -93,7 +93,7 @@ function createPlanet(pos, radius, planetMap, planetBump, cantMoons, moonRadius,
     let circle = new THREE.LineLoop( geometry, material );
     circle.rotation.x = -Math.PI / 2;
 
-    return new Planet(planet, new THREE.Object3D, moons, Math.PI, circle, translation, extra);
+    return new Planet(planet, new THREE.Object3D, moons, Math.PI * 1.5, circle, translation, extra);
 }
 
 function createPlanets() {
@@ -141,7 +141,7 @@ function createPlanets() {
     let textureMap = new THREE.TextureLoader().load(moonMap);
     let bumpMap = new THREE.TextureLoader().load(moonBump) || null;
     
-    material = new THREE.MeshPhongMaterial({ map: textureMap, bumpMap: bumpMap, bumpScale: 0.2 });
+    material = new THREE.MeshPhongMaterial({ map: textureMap, bumpMap: bumpMap, bumpScale: 0.006 });
     geometry = new THREE.SphereGeometry(0.2, 20, 20);
     
     let moons = [];
